@@ -306,3 +306,8 @@ footer {
     color: var(--light);
     border-top: 1px solid #1a1a1a;
 }
+
+/* Wider container for team page to fit 3 images in a row */
+.team-page-wide {
+    max-width: 1200px !important;
+}
