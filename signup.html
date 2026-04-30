@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achievements - Hardware Acceleration Club of KUET (HACK)</title>
+    <title>Sign Up - Hardware Acceleration Club of KUET (HACK)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -26,22 +26,22 @@
                     <li><a href="index.html" class="nav-link">Home</a></li>
                     <li><a href="about.html" class="nav-link">About</a></li>
                     <li><a href="activities.html" class="nav-link">Activities</a></li>
-                    <li><a href="achievements.html" class="nav-link active">Achievements</a></li>
+                    <li><a href="achievements.html" class="nav-link">Achievements</a></li>
                     <li><a href="team.html" class="nav-link">Team</a></li>
                     <li><a href="resources.html" class="nav-link">Resources</a></li>
                     <li><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li><a href="signup.html" class="nav-link">Sign Up</a></li>
+                    <li><a href="signup.html" class="nav-link active">Sign Up</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <!-- Achievements Section -->
+    <!-- Sign Up Section -->
     <main>
-        <section id="achievements" class="hero">
+        <section id="signup" class="hero">
             <div class="hero-content">
-                <h1 class="hero-title">Our Achievements<img src="img/HACKLogo.png" alt="HACK Logo" class="hero-title-logo"></h1>
-                <p class="hero-tagline">Celebrating Our Successes and Milestones</p>
+                <h1 class="hero-title">Join HACK<img src="img/HACKLogo.png" alt="HACK Logo" class="hero-title-logo"></h1>
+                <p class="hero-tagline">Be Part of Our Community</p>
             </div>
             <div class="hero-background">
                 <div class="circle circle-1"></div>
@@ -51,8 +51,24 @@
         </section>
 
         <section class="content-section">
-            <h2>Club Achievements</h2>
-            <p>This section will highlight the notable achievements of the Hardware Acceleration Club of KUET (HACK). Details about awards, successful projects, and other milestones will be added here soon.</p>
+            <h2>Sign Up for Updates</h2>
+            <form id="signupForm">
+                <input type="text" placeholder="Your name" required>
+                <input type="email" placeholder="Your email" required>
+                <input type="text" placeholder="Your Roll" required>
+                <input type="text" placeholder="Batch" required>
+                <input type="text" placeholder="Department" required>
+                <input type="text" placeholder="University" required>
+                <input type="text" placeholder="Why are you join with HACK?" required>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="agreeCheckbox" required>
+                    <span>I must agree with the rules and policies of this club ensuring all the information that I have provided is correct.</span>
+                </label>
+                <button type="submit">Sign Up</button>
+            </form>
+            <div id="signupMessage" class="success-message" style="display: none;">
+                Successfully signed up! ✅
+            </div>
         </section>
     </main>
 
@@ -77,6 +93,32 @@
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
             });
+        });
+
+        // Signup form submission handler
+        const signupForm = document.getElementById('signupForm');
+        const signupMessage = document.getElementById('signupMessage');
+        const agreeCheckbox = document.getElementById('agreeCheckbox');
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Check if checkbox is checked
+            if (!agreeCheckbox.checked) {
+                alert('Please agree with the rules and policies before signing up.');
+                return;
+            }
+            
+            // Show success message
+            signupMessage.style.display = 'block';
+            
+            // Clear form fields
+            signupForm.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                signupMessage.style.display = 'none';
+            }, 5000);
         });
     </script>
 </body>
