@@ -152,7 +152,7 @@ html {
     justify-content: center;
     position: relative;
     background: linear-gradient(135deg, var(--dark) 0%, #050505 100%);
-    padding: 6rem 0 0 0;
+    padding: 6rem 0 3rem 0;
     overflow: hidden;
 }
 
@@ -270,7 +270,7 @@ section a {
     padding: 1.5rem 2rem;
     max-width: 800px;
     margin: 0 auto;
-    margin-top: -8rem;
+    margin-top: 0;
 }
 
 .content-section h2 {
@@ -301,6 +301,33 @@ section a {
 
 .content-section li strong {
     color: var(--primary);
+}
+
+/* Activities Gallery */
+.activities-gallery {
+    max-width: 1200px;
+}
+
+.activity-item {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.activity-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.activity-item h3 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-top: 1rem;
 }
 
 .team-members {
