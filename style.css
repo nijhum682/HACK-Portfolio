@@ -277,7 +277,7 @@ section a {
     font-size: 2.5rem;
     color: var(--primary);
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .content-section p {
@@ -293,7 +293,7 @@ section a {
 }
 
 .content-section li {
-    padding: 1.5rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1.1rem;
     color: #fff;
@@ -450,6 +450,47 @@ footer {
     text-align: center;
     color: var(--light);
     border-top: 1px solid #1a1a1a;
+}
+
+.quick-contact {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.quick-contacts-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.quick-contact-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 auto 1.5rem auto;
+    display: block;
+    border: 2px solid var(--primary);
+}
+
+.quick-contact h3 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.quick-contact p {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
 }
 
 /* Wider container for team page to fit 3 images in a row */
