@@ -1,43 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources - Hardware Acceleration Club of KUET (HACK)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1>HACK</h1>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About</a></li>
-                    <li><a href="activities.html" class="nav-link">Activities</a></li>
-                    <li><a href="achievements.html" class="nav-link">Achievements</a></li>
-                    <li><a href="team.html" class="nav-link">Team</a></li>
-                    <li><a href="resources.html" class="nav-link active">Resources</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li><a href="signup.html" class="nav-link">Sign Up</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="resources.aspx.cs" Inherits="project1.resources" MasterPageFile="~/Site.Master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    <!-- Resources Section -->
-    <main>
         <section id="resources" class="hero">
             <div class="hero-content">
                                 <h1 class="hero-title">
@@ -86,7 +49,7 @@
 
         <div id="tutorials-section" class="resource-content" style="display: none;">
             <div class="video-list" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 1.5rem;">
-                
+
                 <div class="video-card" style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(0, 255, 204, 0.2); width: 100%; max-width: 400px; text-align: left;">
                     <div class="video-wrapper" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 4px; margin-bottom: 1rem;">
                         <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/lNFrFuzBGyo" title="কীবোর্ড শর্টকাট" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -104,55 +67,32 @@
                 </div>
 
             </div>
-            <script>
-                function showResource(type) {
-                    const booksSection = document.getElementById('books-section');
-                    const tutorialsSection = document.getElementById('tutorials-section');
-                    const btnBooks = document.getElementById('btn-books');
-                    const btnTutorials = document.getElementById('btn-tutorials');
+        </div>
 
-                    if (type === 'books') {
-                        booksSection.style.display = 'block';
-                        tutorialsSection.style.display = 'none';
-                        btnBooks.style.background = 'var(--primary)';
-                        btnBooks.style.color = 'var(--dark)';
-                        btnTutorials.style.background = 'transparent';
-                        btnTutorials.style.color = '#fff';
-                    } else {
-                        booksSection.style.display = 'none';
-                        tutorialsSection.style.display = 'block';
-                        btnTutorials.style.background = 'var(--primary)';
-                        btnTutorials.style.color = 'var(--dark)';
-                        btnBooks.style.background = 'transparent';
-                        btnBooks.style.color = '#fff';
-                    }
+        <script>
+            function showResource(type) {
+                const booksSection = document.getElementById('books-section');
+                const tutorialsSection = document.getElementById('tutorials-section');
+                const btnBooks = document.getElementById('btn-books');
+                const btnTutorials = document.getElementById('btn-tutorials');
+
+                if (type === 'books') {
+                    booksSection.style.display = 'block';
+                    tutorialsSection.style.display = 'none';
+                    btnBooks.style.background = '#00d4ff';
+                    btnBooks.style.color = '#0a0a0a';
+                    btnTutorials.style.background = 'transparent';
+                    btnTutorials.style.color = '#fff';
+                } else if (type === 'tutorials') {
+                    booksSection.style.display = 'none';
+                    tutorialsSection.style.display = 'block';
+                    btnTutorials.style.background = '#00d4ff';
+                    btnTutorials.style.color = '#0a0a0a';
+                    btnBooks.style.background = 'transparent';
+                    btnBooks.style.color = '#fff';
                 }
-            </script>
+            }
+        </script>
         </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Hardware Acceleration Club of KUET (HACK)</p>
-    </footer>
-
-    <script>
-        // Mobile menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('navMenu');
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close menu when a link is clicked
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-    </script>
-</body>
-</html>
+    
+</asp:Content>

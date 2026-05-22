@@ -1,43 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Hardware Acceleration Club of KUET (HACK)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1>HACK</h1>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About</a></li>
-                    <li><a href="activities.html" class="nav-link">Activities</a></li>
-                    <li><a href="achievements.html" class="nav-link">Achievements</a></li>
-                    <li><a href="team.html" class="nav-link">Team</a></li>
-                    <li><a href="resources.html" class="nav-link">Resources</a></li>
-                    <li><a href="contact.html" class="nav-link active">Contact</a></li>
-                    <li><a href="signup.html" class="nav-link">Sign Up</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="contact.aspx.cs" Inherits="project1.contact" MasterPageFile="~/Site.Master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    <!-- Contact Section -->
-    <main>
         <section id="contact" class="hero">
             <div class="hero-content">
                                 <h1 class="hero-title">
@@ -63,14 +26,14 @@
 
         <section class="content-section">
             <h2>Contact Form</h2>
-            <form id="contactForm">
+            <div id="contactForm" class="custom-form">
                 <input type="text" placeholder="Your name" required>
                 <input type="email" placeholder="Your email" required>
                 <input type="text" placeholder="Your Roll" required>
                 <input type="text" placeholder="Department">
                 <textarea rows="4" placeholder="Your message" required></textarea>
                 <button type="submit">Send Message</button>
-            </form>
+            </div>
             <div id="successMessage" class="success-message" style="display: none;">
                 Your message is sent to our admin ✅
             </div>
@@ -109,49 +72,5 @@
                 </div>
             </div>
         </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Hardware Acceleration Club of KUET (HACK)</p>
-    </footer>
-
-    <script>
-        // Mobile menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('navMenu');
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close menu when a link is clicked
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // Contact form submission handler
-        const contactForm = document.getElementById('contactForm');
-        const successMessage = document.getElementById('successMessage');
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Show success message
-            successMessage.style.display = 'block';
-            
-            // Clear form fields
-            contactForm.reset();
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
-        });
-    </script>
-</body>
-</html>
+    
+</asp:Content>

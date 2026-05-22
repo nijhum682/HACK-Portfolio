@@ -1,0 +1,400 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="team_new.aspx.cs" Inherits="project1.team_new" MasterPageFile="~/Site.Master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+
+        <section id="team" class="hero" style="padding-bottom: 0.5rem;">
+            <div class="hero-content">
+                <h1 class="hero-title">Our Team<img src="img/HACKLogo.png" alt="HACK Logo" class="hero-title-logo"></h1>
+                <p class="team-intro">This segment highlights the club member's photo, name and role across all designations. It visually celebrates the leadership and collaborative spirit that drive the club's success. By visually organizing the team, it fosters a sense of community and professionalism, making it easy for visitors to connect with the people behind the club's activities and achievements.</p>
+                <p class="hero-tagline" style="margin-top: 2.2rem; margin-bottom: 0.2rem;">Meet the Leaders Behind HACK</p>
+            </div>
+            <div class="hero-background">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+            </div>
+        </section>
+         <section class="content-section team-page-wide" id="designation-filter-section">
+            <div class="designation-filter">
+                <button class="filter-btn filter-btn-active" data-designation="all">All</button>
+                <button type="button" class="filter-btn" data-designation="Moderator">Moderator</button>
+                <button type="button" class="filter-btn" data-designation="President">President</button>
+                <button type="button" class="filter-btn" data-designation="Vice President">Vice President</button>
+                <button type="button" class="filter-btn" data-designation="General Secretary">General Secretary</button>
+                <button type="button" class="filter-btn" data-designation="Assistant General Secretary">Assistant General Secretary</button>
+                <button type="button" class="filter-btn" data-designation="Manager">Manager</button>
+                <button type="button" class="filter-btn" data-designation="Assistant Workshop Manager">Assistant Workshop Manager</button>
+                <button type="button" class="filter-btn" data-designation="Assistant Editorial Manager">Assistant Editorial Manager</button>
+                <button type="button" class="filter-btn" data-designation="Performance Analyzer">Performance Analyzer</button>
+                <button type="button" class="filter-btn" data-designation="Batch Representative">Batch Representatives</button>
+                <button type="button" class="filter-btn" data-designation="Senior Executive">Senior Executives</button>
+                <button type="button" class="filter-btn" data-designation="Junior Executive">Junior Executives</button>
+            </div>
+        </section>
+         <section class="content-section team-page-wide">
+            <h2>Moderators</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Moderator">
+                    <img src="img/Sadi.jpg" alt="Dr. Muhammad Sheikh Sadi" class="team-photo">
+                    <h3>Dr. Muhammad Sheikh Sadi</h3>
+                    <p>Professor, Dept. of CSE, KUET</p>
+                </div>
+                <div class="team-member" data-designation="Moderator">
+                    <img src="img/Milon.jpg" alt="Professor, Dr. MD. Milon Islam" class="team-photo">
+                    <h3>Professor, Dr. MD. Milon Islam</h3>
+                    <p>Assistant Professor, Dept. of CSE, KUET</p>
+                </div>
+                <div class="team-member" data-designation="Moderator">
+                    <img src="img/Repon.jpg" alt="MD. Repon Islam" class="team-photo">
+                    <h3>MD. Repon Islam</h3>
+                    <p>Lecturer, Dept. of CSE, KUET</p>
+                </div>
+                <div class="team-member" data-designation="Moderator">
+                    <img src="img/Badi.jpg" alt="MD Badiuzzaman Shuvo" class="team-photo">
+                    <h3>MD Badiuzzaman Shuvo</h3>
+                    <p>Lecturer, Dept. of CSE, KUET</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Presidents</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="President">
+                    <img src="img/Amit.jpeg" alt="Amit Kairy" class="team-photo">
+                    <h3>Amit Kairy</h3>
+                    <p>President (Administration)</p>
+                </div>
+                <div class="team-member" data-designation="President">
+                    <img src="img/Faysal.jpeg" alt="Faysal Mahmud" class="team-photo">
+                    <h3>Faysal Mahmud</h3>
+                    <p>President (Technical Affairs)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Vice Presidents</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Vice President">
+                    <img src="img/mofazzel.jpeg" alt="Mofazzal Hosen" class="team-photo">
+                    <h3>Mofazzal Hosen</h3>
+                    <p>Vice President</p>
+                </div>
+                <div class="team-member" data-designation="Vice President">
+                    <img src="img/Swapnil.jpeg" alt="Swapnil Kundu" class="team-photo">
+                    <h3>Swapnil Kundu</h3>
+                    <p>Vice President</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>General Secretary</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="General Secretary">
+                    <img src="img/Raufun.jpeg" alt="Raufun Ahsan" class="team-photo">
+                    <h3>Raufun Ahsan</h3>
+                    <p>General Secretary (Organizing)</p>
+                </div>
+                <div class="team-member" data-designation="General Secretary">
+                    <img src="img/mahi.jpeg" alt="Khadimul Islam Mahi" class="team-photo">
+                    <h3>Khadimul Islam Mahi</h3>
+                    <p>General Secretary (Publication)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Assistant General Secretary</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Assistant General Secretary">
+                    <img src="img/Shormi.jpeg" alt="Shormi Ghosh" class="team-photo">
+                    <h3>Shormi Ghosh</h3>
+                    <p>Assistant General Secretary (Organizing)</p>
+                </div>
+                <div class="team-member" data-designation="Assistant General Secretary">
+                    <img src="img/Mosaddek.jpeg" alt="MD. Mosaddek Ali" class="team-photo">
+                    <h3>MD. Mosaddek Ali</h3>
+                    <p>Assistant General Secretary (Publication)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Managers</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Manager">
+                    <img src="img/hasan.jpeg" alt="Tawhidul Hasan" class="team-photo">
+                    <h3>Tawhidul Hasan</h3>
+                    <p>Editorial Manager</p>
+                </div>
+                <div class="team-member" data-designation="Manager">
+                    <img src="img/Zain.jpeg" alt="MD. Ebrahim Siddik Zain" class="team-photo">
+                    <h3>MD. Ebrahim Siddik Zain</h3>
+                    <p>Workshop Manager</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section team-page-wide">
+            <h2>Assistant Workshop Managers</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Assistant Workshop Manager">
+                    <img src="img/Sadid.jpeg" alt="Saleh Sadid Mir" class="team-photo">
+                    <h3>Saleh Sadid Mir</h3>
+                    <p>Assistant Workshop Manager</p>
+                </div>
+                <div class="team-member" data-designation="Assistant Workshop Manager">
+                    <img src="img/Tahmid.jpeg" alt="Tahmid Hossain Chowdhury Mahin" class="team-photo">
+                    <h3>Tahmid Hossain Chowdhury Mahin</h3>
+                    <p>Assistant Workshop Manager</p>
+                </div>
+                <div class="team-member" data-designation="Assistant Workshop Manager">
+                    <img src="img/Isaac.jpeg" alt="Isaac Aneek Sarker" class="team-photo">
+                    <h3>Isaac Aneek Sarker</h3>
+                    <p>Assistant Workshop Manager</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Assistant Editorial Managers</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Assistant Editorial Manager">
+                    <img src="img/Khorshed.jpeg" alt="MD Khorshed Sheikh" class="team-photo">
+                    <h3>MD Khorshed Sheikh</h3>
+                    <p>Assistant Editorial Manager</p>
+                </div>
+                <div class="team-member" data-designation="Assistant Editorial Manager">
+                    <img src="img/Hirobi.jpeg" alt="Hirobi Chakma" class="team-photo">
+                    <h3>Hirobi Chakma</h3>
+                    <p>Assistant Editorial Manager</p>
+                </div>
+            </div>
+        </section>
+
+         <section class="content-section team-page-wide">
+            <h2>Performance Analyzers</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Performance Analyzer">
+                    <img src="img/Shahriar.jpeg" alt="Munem Shahriar Nijhum" class="team-photo">
+                    <h3>Munem Shahriar Nijhum</h3>
+                    <p>Performance Analyzer</p>
+                </div>
+                <div class="team-member" data-designation="Performance Analyzer">
+                    <img src="img/Farhad.jpeg" alt="MD R Farhad" class="team-photo">
+                    <h3>MD R Farhad</h3>
+                    <p>Performance Analyzer</p>
+                </div>
+                <div class="team-member" data-designation="Performance Analyzer">
+                    <img src="img/Yasar.jpeg" alt="Yasar Wajih" class="team-photo">
+                    <h3>Yasar Wajih</h3>
+                    <p>Performance Analyzer</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section team-page-wide">
+            <h2>Batch Representatives (2k21)</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Saif.jpeg" alt="Abdullah Al Saif" class="team-photo">
+                    <h3>Abdullah Al Saif</h3>
+                    <p>Batch Representative (2k21)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Shajid.jpeg" alt="Rafsani Shajid" class="team-photo">
+                    <h3>Rafsani Shajid</h3>
+                    <p>Batch Representative (2k21)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Shujon.jpeg" alt="Shakhoyat Rahman" class="team-photo">
+                    <h3>Shakhoyat Rahman</h3>
+                    <p>Batch Representative (2k21)</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="content-section team-page-wide">
+            <h2>Batch Representatives (2k22)</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Shahriar.jpeg" alt="Munem Shahriar Nijhum" class="team-photo">
+                    <h3>Munem Shahriar Nijhum</h3>
+                    <p>Batch Representative (2k22)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Mehedi.jpeg" alt="Mehedi Hasan" class="team-photo">
+                    <h3>Mehedi Hasan</h3>
+                    <p>Batch Representative (2k22)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Prottoy.jpeg" alt="Shahriar Hossain Prottoy" class="team-photo">
+                    <h3>Shahriar Hossain Prottoy</h3>
+                    <p>Batch Representative (2k22)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section team-page-wide">
+            <h2>Batch Representatives (2k23)</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Khalid.jpg" alt="Khalid Bin Atik" class="team-photo">
+                    <h3>Khalid Bin Atik</h3>
+                    <p>Batch Representative (2k23)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Mohosin.jpg" alt="Mohosin Alam" class="team-photo">
+                    <h3>Mohosin Alam</h3>
+                    <p>Batch Representative (2k23)</p>
+                </div>
+                <div class="team-member" data-designation="Batch Representative">
+                    <img src="img/Alfaz.jpg" alt="Alfaz Rahman" class="team-photo">
+                    <h3>Alfaz Rahman</h3>
+                    <p>Batch Representative (2k23)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section team-page-wide">
+            <h2>Senior Executives</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Alif.jpeg" alt="Alif Al Ahad" class="team-photo">
+                    <h3>Alif al Ahad</h3>
+                    <p>Senior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Sulaiman.jpeg" alt="MD. Sulaiman" class="team-photo">
+                    <h3>MD. Sulaiman</h3>
+                    <p>Senior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Sanzida.jpeg" alt="Sanzida Alam" class="team-photo">
+                    <h3>Sanzida Alam</h3>
+                    <p>Senior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Shomik.jpeg" alt="Shomik Shahriar" class="team-photo">
+                    <h3>Shomik Shahriar</h3>
+                    <p>Senior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Sufian.jpeg" alt="Abu Sufian" class="team-photo">
+                    <h3>Abu Sufian</h3>
+                    <p>Senior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Senior Executive">
+                    <img src="img/Avas.jpeg" alt="Aavas Roy" class="team-photo">
+                    <h3>Aavas Roy</h3>
+                    <p>Senior Executive</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section team-page-wide">
+            <h2>Junior Executives</h2>
+            <div class="team-members">
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Int.jpeg" alt="Intejar Hasnath Alif" class="team-photo">
+                    <h3>Intejar Hasnath Alif</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Souvik.jpeg" alt="Souvik Kundu" class="team-photo">
+                    <h3>Souvik Kundu</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Jawad.jpg" alt="Abrar Jawad" class="team-photo">
+                    <h3>Abrar Jawad</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Belly.jpeg" alt="Efat Ara Belly" class="team-photo">
+                    <h3>Efat Ara Belly</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Rahat.jpg" alt="Tasnimul Hassan Rahat" class="team-photo">
+                    <h3>Tasnimul Hassan Rahat</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Hossain.jpeg" alt="Zubaier Hossain" class="team-photo">
+                    <h3>Zubayer Hossain</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Mahadi.jpeg" alt="MD Mahadi Hasan" class="team-photo">
+                    <h3>MD Mahadi Hasan</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Raju.HEIC" alt="Raju Sarker" class="team-photo">
+                    <h3>Raju Sarker</h3>
+                    <p>Junior Executive</p>
+                </div>
+                <div class="team-member" data-designation="Junior Executive">
+                    <img src="img/Prantor.jpg" alt="Sanjidur Rahman Prantor" class="team-photo">
+                    <h3>Sanzidur Rahman Prantor</h3>
+                    <p>Junior Executive</p>
+                </div>
+            </div>
+        </section>
+
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const teamMembers = document.querySelectorAll('.team-member');
+        const contentSections = document.querySelectorAll('.content-section:not(#designation-filter-section)');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                filterBtns.forEach(b => b.classList.remove('filter-btn-active'));
+                btn.classList.add('filter-btn-active');
+                
+                const filterValue = btn.getAttribute('data-designation');
+                let targetSection = null;
+                
+                if (filterValue === 'all') {
+                    contentSections.forEach(section => section.style.display = 'block');
+                    teamMembers.forEach(member => member.style.display = 'block');
+                    // Scroll to the first team section, offset slightly for fixed header
+                    targetSection = contentSections[0];
+                } else {
+                    contentSections.forEach(section => section.style.display = 'none');
+                    teamMembers.forEach(member => {
+                        if (member.getAttribute('data-designation') === filterValue) {
+                            member.style.display = 'block';
+                            let parentSection = member.closest('.content-section');
+                            parentSection.style.display = 'block';
+                            if (!targetSection) targetSection = parentSection;
+                        } else {
+                            member.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Scroll to target
+                if (targetSection) {
+                    const headerOffset = 100; // Account for sticky header
+                    const elementPosition = targetSection.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                         top: offsetPosition,
+                         behavior: "smooth"
+                    });
+                }
+            });
+        });
+    });
+</script>
+</asp:Content>
+
+

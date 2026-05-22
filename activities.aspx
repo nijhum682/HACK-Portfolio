@@ -1,43 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activities - Hardware Acceleration Club of KUET (HACK)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1>HACK</h1>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About</a></li>
-                    <li><a href="activities.html" class="nav-link active">Activities</a></li>
-                    <li><a href="achievements.html" class="nav-link">Achievements</a></li>
-                    <li><a href="team.html" class="nav-link">Team</a></li>
-                    <li><a href="resources.html" class="nav-link">Resources</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li><a href="signup.html" class="nav-link">Sign Up</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="activities.aspx.cs" Inherits="project1.activities" MasterPageFile="~/Site.Master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    <!-- Activities Section -->
-    <main>
         <section id="activities" class="hero">
             <div class="hero-content">
                                 <h1 class="hero-title" id="activities-title">
@@ -63,12 +26,12 @@
         <section class="content-section">
             <h2>Our Activities</h2>
             <ul>
-                <li><strong>🔵Hackathon</strong> 👉 24-hour coding challenge with mentors and prizes.</li>
-                <li><strong>🔵Cybersecurity Workshop</strong> 👉 hands-on sessions on ethical hacking.</li>
-                <li><strong>🔵Hardware Workshop</strong> 👉 hands-on session to design, build and test physical electronic systems and devices.</li>
-                <li><strong>🔵Graduate's Farewell</strong> 👉 held to honor graduating students and celebrate their contributions in HACK.</li>
-                <li><strong>🔵Fresher's Orientation</strong> 👉 introductory program for freshers to understand club's environment, resources and expectations.</li>
-                <li><strong>🔵Intra-University Hardware Competition</strong> 👉 arranged to design and build hardware solutions showcasing technical skills of University students.</li>
+                <li><strong>Hackathon</strong>  24-hour coding challenge with mentors and prizes.</li>
+                <li><strong>Cybersecurity Workshop</strong>  hands-on sessions on ethical hacking.</li>
+                <li><strong>Hardware Workshop</strong>  hands-on session to design, build and test physical electronic systems and devices.</li>
+                <li><strong>Graduate's Farewell</strong>  held to honor graduating students and celebrate their contributions in HACK.</li>
+                <li><strong>Fresher's Orientation</strong>  introductory program for freshers to understand club's environment, resources and expectations.</li>
+                <li><strong>Intra-University Hardware Competition</strong>  arranged to design and build hardware solutions showcasing technical skills of University students.</li>
             </ul>
         </section>
 
@@ -131,30 +94,5 @@
                 <h3>Mentors at Classbreak</h3>
             </div>
         </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Hardware Acceleration Club of KUET (HACK)</p>
-    </footer>
-
-    <script>
-        // Mobile menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('navMenu');
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close menu when a link is clicked
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-    </script>
-</body>
-</html>
+    
+</asp:Content>

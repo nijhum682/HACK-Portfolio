@@ -398,7 +398,7 @@ section a {
     font-size: 1rem;
 }
 
-form {
+.custom-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -406,7 +406,7 @@ form {
     margin: 0 auto;
 }
 
-form input, form textarea {
+.custom-form input, .custom-form textarea {
     padding: 1rem;
     border: 1px solid #1a1a1a;
     background: rgba(255, 255, 255, 0.05);
@@ -414,7 +414,7 @@ form input, form textarea {
     border-radius: 5px;
 }
 
-form button {
+.custom-form button {
     padding: 1rem;
     background: linear-gradient(135deg, var(--primary), #0099cc);
     color: var(--dark);
@@ -425,7 +425,7 @@ form button {
     transition: all 0.3s ease;
 }
 
-form button:hover {
+.custom-form button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
 }
