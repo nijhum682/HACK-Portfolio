@@ -1,7 +1,0 @@
-C:\web_ass\project1\bin\project1.dll.config
-C:\web_ass\project1\bin\project1.dll
-C:\web_ass\project1\bin\project1.pdb
-C:\web_ass\project1\obj\Debug\project1.csproj.AssemblyReference.cache
-C:\web_ass\project1\obj\Debug\project1.csproj.CoreCompileInputs.cache
-C:\web_ass\project1\obj\Debug\project1.dll
-C:\web_ass\project1\obj\Debug\project1.pdb
