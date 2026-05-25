@@ -864,3 +864,164 @@ footer {
         opacity: 1;
     }
 }
+
+/* Profile Page Styles */
+.profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 15px;
+    padding: 2.5rem;
+    max-width: 700px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar-container {
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.profile-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.profile-name {
+    font-size: 2rem;
+    color: #fff;
+    margin: 0;
+    font-weight: 600;
+    text-align: left !important;
+}
+
+.badge-user, .badge-admin {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    width: max-content;
+}
+
+.badge-user {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--primary);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.badge-admin {
+    background: rgba(255, 0, 110, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(255, 0, 110, 0.3);
+}
+
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.detail-item label {
+    font-size: 0.9rem;
+    color: var(--light);
+    font-weight: 500;
+}
+
+.detail-item span {
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: 400;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Anonymous card */
+.anonymous-card {
+    text-align: center;
+    padding: 3rem;
+}
+
+.anonymous-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem auto;
+}
+
+.anonymous-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.anonymous-card h2 {
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive adjustment for Profile details grid */
+@media (max-width: 600px) {
+    .profile-details-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-name {
+        text-align: center !important;
+    }
+    
+    .badge-user, .badge-admin {
+        margin: 0 auto;
+    }
+    
+    .profile-actions {
+        justify-content: center;
+    }
+    
+    .profile-card {
+        padding: 1.5rem;
+    }
+}

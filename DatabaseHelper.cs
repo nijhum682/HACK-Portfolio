@@ -530,6 +530,63 @@ namespace project1
             }
         }
 
+        public DataTable GetUserByCredentials(string username, string password)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Users WHERE Username = @username AND Password = @password AND IsActive = 1";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@password", password);
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("GetUserByCredentials", ex);
+                System.Diagnostics.Debug.WriteLine("Error getting user by credentials: " + ex.Message);
+                return null;
+            }
+        }
+
+        public DataTable GetUserByUsername(string username)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Users WHERE Username = @username";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("GetUserByUsername", ex);
+                System.Diagnostics.Debug.WriteLine("Error getting user by username: " + ex.Message);
+                return null;
+            }
+        }
+
         private void LogError(string context, Exception ex)
         {
             try

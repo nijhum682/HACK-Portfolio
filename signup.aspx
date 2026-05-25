@@ -15,6 +15,9 @@
                     <span style="animation-delay: 0.45s;">K</span>
                 </h1>
                 <p class="hero-tagline">Be Part of Our Community</p>
+                <p style="color: var(--light); font-size: 1.1rem; margin-top: 0.5rem; position: relative; z-index: 10;">
+                    Already have an account? <a href="signin.aspx" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign In</a>
+                </p>
             </div>
             <div class="hero-background">
                 <div class="circle circle-1"></div>

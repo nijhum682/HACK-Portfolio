@@ -35,6 +35,8 @@
                         <li><a href="resources.aspx" class="nav-link">Resources</a></li>
                         <li><a href="contact.aspx" class="nav-link">Contact</a></li>
                         <li><a href="signup.aspx" class="nav-link">Sign Up</a></li>
+                        <li><a href="signin.aspx" class="nav-link">Sign In</a></li>
+                        <li><a href="profile.aspx" class="nav-link">Profile</a></li>
                     </ul>
                 </div>
             </nav>
@@ -79,7 +81,10 @@
             }
 
             navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href').toLowerCase();
+                let linkPath = link.getAttribute('href').toLowerCase();
+                if (linkPath.includes('?')) {
+                    linkPath = linkPath.split('?')[0];
+                }
                 // Match exact page name, or match variations of page names (e.g. team.aspx, team_new.aspx -> Team)
                 if (linkPath === pageName || (pageName.startsWith('team') && linkPath === 'team.aspx')) {
                     link.classList.add('active');
