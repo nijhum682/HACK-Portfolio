@@ -79,12 +79,15 @@ namespace project1
                         CREATE TABLE IF NOT EXISTS Users (
                             UserID INT AUTO_INCREMENT PRIMARY KEY,
                             Name VARCHAR(255) NOT NULL,
+                            Username VARCHAR(100) UNIQUE,
+                            Password VARCHAR(255) NOT NULL,
                             Email VARCHAR(255) NOT NULL UNIQUE,
                             Roll VARCHAR(50) NOT NULL UNIQUE,
                             Batch VARCHAR(50) NOT NULL,
                             Department VARCHAR(100) NOT NULL,
                             University VARCHAR(255) NOT NULL,
                             Phone VARCHAR(20),
+                            UserType VARCHAR(50) DEFAULT 'User',
                             Reason TEXT NOT NULL,
                             DateRegistered DATETIME DEFAULT CURRENT_TIMESTAMP,
                             IsActive TINYINT DEFAULT 1,
@@ -119,6 +122,75 @@ namespace project1
                             cmd.ExecuteNonQuery();
                         }
                     }
+
+                    // Check if Username column exists in Users table, and add it if it doesn't
+                    string checkUsernameColumnQuery = "SHOW COLUMNS FROM Users LIKE 'Username';";
+                    bool usernameColumnExists = false;
+                    using (MySqlCommand cmd = new MySqlCommand(checkUsernameColumnQuery, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                usernameColumnExists = true;
+                            }
+                        }
+                    }
+
+                    if (!usernameColumnExists)
+                    {
+                        string addUsernameColumnQuery = "ALTER TABLE Users ADD COLUMN Username VARCHAR(100) UNIQUE;";
+                        using (MySqlCommand cmd = new MySqlCommand(addUsernameColumnQuery, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Check if UserType column exists in Users table, and add it if it doesn't
+                    string checkUserTypeColumnQuery = "SHOW COLUMNS FROM Users LIKE 'UserType';";
+                    bool userTypeColumnExists = false;
+                    using (MySqlCommand cmd = new MySqlCommand(checkUserTypeColumnQuery, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                userTypeColumnExists = true;
+                            }
+                        }
+                    }
+
+                    if (!userTypeColumnExists)
+                    {
+                        string addUserTypeColumnQuery = "ALTER TABLE Users ADD COLUMN UserType VARCHAR(50) DEFAULT 'User';";
+                        using (MySqlCommand cmd = new MySqlCommand(addUserTypeColumnQuery, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Check if Password column exists in Users table, and add it if it doesn't
+                    string checkPasswordColumnQuery = "SHOW COLUMNS FROM Users LIKE 'Password';";
+                    bool passwordColumnExists = false;
+                    using (MySqlCommand cmd = new MySqlCommand(checkPasswordColumnQuery, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                passwordColumnExists = true;
+                            }
+                        }
+                    }
+
+                    if (!passwordColumnExists)
+                    {
+                        string addPasswordColumnQuery = "ALTER TABLE Users ADD COLUMN Password VARCHAR(255);";
+                        using (MySqlCommand cmd = new MySqlCommand(addPasswordColumnQuery, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
                 }
 
                 // Mark as successfully initialized to prevent subsequent checks
@@ -126,6 +198,7 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("InitializeDatabase", ex);
                 System.Diagnostics.Debug.WriteLine("Database initialization error: " + ex.Message);
                 // Also write to console for easier debugging
                 Console.WriteLine("Database initialization error: " + ex.Message);
@@ -162,6 +235,7 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("InsertContact", ex);
                 System.Diagnostics.Debug.WriteLine("Error inserting contact: " + ex.Message);
                 return false;
             }
@@ -269,25 +343,28 @@ namespace project1
         // USER/SIGN-UP OPERATIONS
         // ============================================
 
-        public bool InsertUser(string name, string email, string roll, string batch, string department, string university, string phone, string reason)
+        public bool InsertUser(string name, string username, string password, string email, string roll, string batch, string department, string university, string phone, string reason, string userType)
         {
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
                     conn.Open();
-                    string query = @"INSERT INTO Users (Name, Email, Roll, Batch, Department, University, Phone, Reason) 
-                                   VALUES (@name, @email, @roll, @batch, @department, @university, @phone, @reason)";
+                    string query = @"INSERT INTO Users (Name, Username, Password, Email, Roll, Batch, Department, University, Phone, UserType, Reason) 
+                                   VALUES (@name, @username, @password, @email, @roll, @batch, @department, @university, @phone, @userType, @reason)";
                     
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@password", password);
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@roll", roll);
                         cmd.Parameters.AddWithValue("@batch", batch);
                         cmd.Parameters.AddWithValue("@department", department);
                         cmd.Parameters.AddWithValue("@university", university);
                         cmd.Parameters.AddWithValue("@phone", phone);
+                        cmd.Parameters.AddWithValue("@userType", userType);
                         cmd.Parameters.AddWithValue("@reason", reason);
                         
                         cmd.ExecuteNonQuery();
@@ -297,7 +374,33 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("InsertUser", ex);
                 System.Diagnostics.Debug.WriteLine("Error inserting user: " + ex.Message);
+                return false;
+            }
+        }
+
+        public bool CheckUsernameTaken(string username)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Users WHERE Username = @username";
+                    
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        long count = Convert.ToInt64(cmd.ExecuteScalar());
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("CheckUsernameTaken", ex);
+                System.Diagnostics.Debug.WriteLine("Error checking username availability: " + ex.Message);
                 return false;
             }
         }
@@ -321,6 +424,7 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("CheckUsernameExists", ex);
                 System.Diagnostics.Debug.WriteLine("Error checking username (roll): " + ex.Message);
                 return false;
             }
@@ -345,6 +449,7 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("CheckEmailExists", ex);
                 System.Diagnostics.Debug.WriteLine("Error checking email: " + ex.Message);
                 return false;
             }
@@ -356,7 +461,7 @@ namespace project1
             {
                 using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
-                    string query = @"SELECT UserID, Name, Email, Roll, Batch, Department, University, Phone, DateRegistered, IsActive 
+                    string query = @"SELECT UserID, Name, Username, Password, Email, Roll, Batch, Department, University, Phone, UserType, DateRegistered, IsActive 
                                    FROM Users ORDER BY DateRegistered DESC";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -419,9 +524,27 @@ namespace project1
             }
             catch (Exception ex)
             {
+                LogError("DeleteUser", ex);
                 System.Diagnostics.Debug.WriteLine("Error deleting user: " + ex.Message);
                 return false;
             }
+        }
+
+        private void LogError(string context, Exception ex)
+        {
+            try
+            {
+                string logPath = AppDomain.CurrentDomain.BaseDirectory + "db_error.log";
+                string message = string.Format("[{0}] {1}: {2}{3}{4}{5}", 
+                    DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
+                    context, 
+                    ex.ToString(), 
+                    Environment.NewLine, 
+                    "--------------------------------------------------", 
+                    Environment.NewLine);
+                System.IO.File.AppendAllText(logPath, message);
+            }
+            catch { }
         }
     }
 }

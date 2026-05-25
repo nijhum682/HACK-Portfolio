@@ -7,6 +7,8 @@ namespace project1
         // Manually declare HTML Server Controls
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl signupForm;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl txtUsername;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl txtPassword;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtEmail;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtRoll;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtBatch;
@@ -14,6 +16,8 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtUni;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtmobile;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtReason;
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton radUser;
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton radAdmin;
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox agreeCheckbox;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl signupMessage;
 
@@ -25,6 +29,8 @@ namespace project1
         {
             // Extract input values from HTML server controls
             string name = txtName.Value.Trim();
+            string username = txtUsername.Value.Trim();
+            string password = txtPassword.Value.Trim();
             string email = txtEmail.Value.Trim();
             string roll = txtRoll.Value.Trim();
             string batch = txtBatch.Value.Trim();
@@ -32,9 +38,12 @@ namespace project1
             string university = txtUni.Value.Trim();
             string mobile = txtmobile.Value.Trim();
             string reason = txtReason.Value.Trim();
+            string userType = radAdmin.Checked ? "Admin" : "User";
 
             // Simple validation
             if (!string.IsNullOrEmpty(name) && 
+                !string.IsNullOrEmpty(username) && 
+                !string.IsNullOrEmpty(password) && 
                 !string.IsNullOrEmpty(email) && 
                 !string.IsNullOrEmpty(roll) && 
                 !string.IsNullOrEmpty(batch) && 
@@ -42,9 +51,35 @@ namespace project1
                 !string.IsNullOrEmpty(university) && 
                 !string.IsNullOrEmpty(mobile) && 
                 !string.IsNullOrEmpty(reason) &&
+                !string.IsNullOrEmpty(userType) &&
                 agreeCheckbox.Checked)
             {
                 DatabaseHelper db = new DatabaseHelper();
+
+                // Check password criteria: at least 6 characters and at least one special symbol
+                bool hasSpecialChar = false;
+                string specialCharacters = @"!@#$%^&*()_+-=[]{}|;':"",./<>?~`";
+                foreach (char c in password)
+                {
+                    if (specialCharacters.IndexOf(c) >= 0)
+                    {
+                        hasSpecialChar = true;
+                        break;
+                    }
+                }
+
+                if (password.Length < 6 || !hasSpecialChar)
+                {
+                    Response.Write("<script>alert('Password must be at least 6 characters long and contain at least one special character!');</script>");
+                    return;
+                }
+
+                // Check if username already exists
+                if (db.CheckUsernameTaken(username))
+                {
+                    Response.Write("<script>alert('Username is already taken!');</script>");
+                    return;
+                }
 
                 // Check if roll number already exists
                 if (db.CheckUsernameExists(roll))
@@ -61,7 +96,7 @@ namespace project1
                 }
 
                 // Insert new user into MySQL
-                bool success = db.InsertUser(name, email, roll, batch, department, university, mobile, reason);
+                bool success = db.InsertUser(name, username, password, email, roll, batch, department, university, mobile, reason, userType);
                 if (success)
                 {
                     // Hide the form and show the success message
