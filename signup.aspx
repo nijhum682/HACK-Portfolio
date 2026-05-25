@@ -25,22 +25,23 @@
 
         <section class="content-section">
             <h2>Sign Up for Updates</h2>
-            <div id="signupForm" class="custom-form">
-                <input type="text" placeholder="Your name" required>
-                <input type="email" placeholder="Your email" required>
-                <input type="text" placeholder="Your Roll" required>
-                <input type="text" placeholder="Batch" required>
-                <input type="text" placeholder="Department" required>
-                <input type="text" placeholder="University" required>
-                <input type="text" placeholder="Why are you joining with HACK?" required>
+            <div id="signupForm" class="custom-form" runat="server">
+                <input type="text" id="txtName" runat="server" placeholder="Your name" required>
+                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required>
+                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required>
+                <input type="text" id="txtBatch" runat="server" placeholder="Batch" required>
+                <input type="text" id="txtDept" runat="server" placeholder="Department" required>
+                <input type="text" id="txtUni" runat="server" placeholder="University" required>
+                <input type="text" id="txtmobile" runat="server" placeholder="Phone Number" required>
+                <input type="text" id="txtReason" runat="server" placeholder="Why are you joining with HACK?" required>
                 <label class="checkbox-label">
-                    <input type="checkbox" id="agreeCheckbox" required>
+                    <input type="checkbox" id="agreeCheckbox" runat="server" required>
                     <span>I must agree with the rules and policies of this club ensuring all the information that I have provided is correct.</span>
                 </label>
-                <button type="submit">Sign Up</button>
+                <button type="submit" id="btnSignUp" runat="server" onserverclick="btnSignUp_Click">Sign Up</button>
             </div>
-            <div id="signupMessage" class="success-message" style="display: none;">
-                Successfully signed up! ✅
+            <div id="signupMessage" class="success-message" runat="server" visible="false">
+                Successfully signed up! 
             </div>
         </section>
     

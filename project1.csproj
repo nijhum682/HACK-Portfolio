@@ -14,6 +14,7 @@
     <RootNamespace>project1</RootNamespace>
     <AssemblyName>project1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -72,8 +73,11 @@
     <Content Include="style.css" />
     <Content Include="Web.config" />
     <Content Include="Site.Master" />
+    <Content Include="project1_db_init.sql" />
+    <Content Include="DatabaseQueries.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseHelper.cs" />
     <Compile Include="about.aspx.cs">
       <DependentUpon>about.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -144,4 +148,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
+  </ItemGroup>
 </Project>

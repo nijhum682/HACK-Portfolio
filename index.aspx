@@ -3,7 +3,7 @@
 
         <section id="home" class="hero">
             <div class="hero-content">
-                <img src="img/HACKLogo.png" alt="HACK Logo" class="hero-logo">
+                <asp:Image ID="imgHackLogo" runat="server" ImageUrl="~/img/HACKLogo.png" AlternateText="HACK Logo" CssClass="hero-logo" />
                                 <h1 class="hero-title">
                     <div class="word">
                         <span style="animation-delay: 0.05s;">H</span><span style="animation-delay: 0.1s;">a</span><span style="animation-delay: 0.15s;">r</span><span style="animation-delay: 0.2s;">d</span><span style="animation-delay: 0.25s;">w</span><span style="animation-delay: 0.3s;">a</span><span style="animation-delay: 0.35s;">r</span><span style="animation-delay: 0.4s;">e</span>

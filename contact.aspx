@@ -26,16 +26,16 @@
 
         <section class="content-section">
             <h2>Contact Form</h2>
-            <div id="contactForm" class="custom-form">
-                <input type="text" placeholder="Your name" required>
-                <input type="email" placeholder="Your email" required>
-                <input type="text" placeholder="Your Roll" required>
-                <input type="text" placeholder="Department">
-                <textarea rows="4" placeholder="Your message" required></textarea>
-                <button type="submit">Send Message</button>
+            <div id="contactForm" class="custom-form" runat="server">
+                <input type="text" id="txtName" runat="server" placeholder="Your name" required>
+                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required>
+                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required>
+                <input type="text" id="txtDept" runat="server" placeholder="Department">
+                <textarea id="txtMessage" runat="server" rows="4" placeholder="Your message" required></textarea>
+                <button type="submit" id="btnSubmit" runat="server" onserverclick="btnSubmit_Click">Send Message</button>
             </div>
-            <div id="successMessage" class="success-message" style="display: none;">
-                Your message is sent to our admin ✅
+            <div id="successMessage" class="success-message" runat="server" visible="false">
+                Your message is sent to our admin 
             </div>
         </section>
 

@@ -54,7 +54,7 @@
                     <div class="video-wrapper" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 4px; margin-bottom: 1rem;">
                         <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/lNFrFuzBGyo" title="কীবোর্ড শর্টকাট" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">কীবোর্ড শর্টকাট</h4>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Keyboard Shortcuts</h4>
                     <p style="font-size: 0.9rem; color: #ddd;">Learn essential keyboard shortcuts to accelerate your workflow.</p>
                 </div>
 
