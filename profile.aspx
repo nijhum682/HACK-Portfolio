@@ -3,7 +3,7 @@
 
         <section id="profile" class="hero">
             <div class="hero-content">
-                <h1 class="hero-title">
+                <h1 id="lblHeroTitle" runat="server" class="hero-title">
                     <span style="animation-delay: 0.05s;">U</span>
                     <span style="animation-delay: 0.1s;">s</span>
                     <span style="animation-delay: 0.15s;">e</span>

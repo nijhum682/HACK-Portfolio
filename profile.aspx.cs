@@ -7,6 +7,7 @@ namespace project1
     {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlProfile;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlAnonymous;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblHeroTitle;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblAvatarInitials;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFullName;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUserTypeBadge;
@@ -77,15 +78,18 @@ namespace project1
                 }
                 lblAvatarInitials.InnerText = !string.IsNullOrEmpty(initials) ? initials.ToUpper() : "U";
 
-                // Badges
+                // Badges and Titles
                 string userType = row["UserType"] != DBNull.Value ? row["UserType"].ToString() : "User";
                 lblUserTypeBadge.InnerText = userType;
+                
+                string titleText = "User Profile";
                 if (userType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                 {
                     lblUserTypeBadge.Attributes["class"] = "badge-admin";
                     lnkManageDb.Visible = true;
                     btnShowAnnounce.Visible = true;
                     btnSeeNotice.Visible = false;
+                    titleText = "Admin Profile";
                 }
                 else
                 {
@@ -94,6 +98,18 @@ namespace project1
                     btnShowAnnounce.Visible = false;
                     btnSeeNotice.Visible = true;
                 }
+                
+                // Dynamic Hero Title Spans
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                double delay = 0.05;
+                foreach (char c in titleText)
+                {
+                    string charStr = c == ' ' ? "&nbsp;" : c.ToString();
+                    sb.AppendFormat("<span style=\"animation-delay: {0:0.00}s;\">{1}</span>", delay, charStr);
+                    delay += 0.05;
+                }
+                lblHeroTitle.InnerHtml = sb.ToString();
+                Page.Title = titleText;
 
                 // Details
                 lblUsername.InnerText = row["Username"] != DBNull.Value ? row["Username"].ToString() : "";
