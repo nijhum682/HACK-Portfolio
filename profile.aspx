@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="profile.aspx.cs" Inherits="project1.profile" MasterPageFile="~/Site.Master" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="profile.aspx.cs" Inherits="project1.profile" MasterPageFile="~/Site.Master" MaintainScrollPositionOnPostback="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
         <section id="profile" class="hero">
@@ -87,6 +87,7 @@
                             <asp:Button ID="btnCancelAnnounce" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancelAnnounce_Click" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" UseSubmitBehavior="false" />
                         </div>
                     </div>
+                    <div id="lblAnnounceNotification" runat="server" visible="false"></div>
                 </div>
 
                 <!-- User Notice Board Section -->
@@ -101,7 +102,7 @@
                     </div>
                 </div>
 
-                <div class="profile-actions" style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 2rem;">
+                <div class="profile-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
                     <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
                     <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
                     <asp:Button ID="btnSeeNotice" runat="server" Text="See Notice" CssClass="btn btn-secondary" OnClick="btnSeeNotice_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
@@ -124,6 +125,27 @@
                     <a href="signup.aspx" class="btn btn-secondary">Create Account</a>
                 </div>
             </div>
+            <!-- Custom Message Modal Box -->
+            <div id="pnlMessageModal" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p id="lblMessageModalText" style="margin-bottom: 0; font-weight: 600; color: #fff; font-size: 1.1rem;"></p>
+            </div>
+
+            <script>
+                function showMessageModal(msg) {
+                    const msgBox = document.getElementById('pnlMessageModal');
+                    const msgText = document.getElementById('lblMessageModalText');
+                    const notification = document.getElementById('lblAnnounceNotification');
+                    if (notification) notification.style.display = 'none';
+
+                    if (msgBox && msgText) {
+                        msgText.innerText = msg;
+                        msgBox.style.display = 'block';
+                        setTimeout(function() {
+                            msgBox.style.display = 'none';
+                        }, 5000);
+                    }
+                }
+            </script>
 
         </section>
 </asp:Content>

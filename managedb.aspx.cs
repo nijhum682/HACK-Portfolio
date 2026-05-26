@@ -7,6 +7,10 @@ namespace project1
     public partial class managedb : System.Web.UI.Page
     {
         protected global::System.Web.UI.WebControls.GridView gvUsers;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNotification;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlDeleteConfirm;
+        protected global::System.Web.UI.WebControls.Button btnConfirmDeleteYes;
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteUserId;
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -57,18 +61,21 @@ namespace project1
 
         protected void gvUsers_RowEditing(object sender, GridViewEditEventArgs e)
         {
+            lblNotification.Visible = false;
             gvUsers.EditIndex = e.NewEditIndex;
             BindUsersGrid();
         }
 
         protected void gvUsers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
+            lblNotification.Visible = false;
             gvUsers.EditIndex = -1;
             BindUsersGrid();
         }
 
         protected void gvUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
+            lblNotification.Visible = false;
             int rowIndex = e.RowIndex;
             int userId = Convert.ToInt32(gvUsers.DataKeys[rowIndex].Value);
 
@@ -93,46 +100,65 @@ namespace project1
                 {
                     gvUsers.EditIndex = -1;
                     BindUsersGrid();
-                    Response.Write("<script>alert('Member updated successfully!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowEditSuccess", "showMessageModal('Edit Successful');", true);
                 }
                 else
                 {
-                    Response.Write("<script>alert('Error updating member. Please verify unique constraint fields (Email, Roll, Username).');</script>");
+                    lblNotification.InnerText = "Error updating member. Please verify unique constraint fields (Email, Roll, Username).";
+                    lblNotification.Attributes["class"] = "error-message";
+                    lblNotification.Visible = true;
                 }
             }
             else
             {
-                Response.Write("<script>alert('Please fill out Name, Email, and Roll fields.');</script>");
+                lblNotification.InnerText = "Please fill out Name, Email, and Roll fields.";
+                lblNotification.Attributes["class"] = "error-message";
+                lblNotification.Visible = true;
             }
         }
 
         protected void gvUsers_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int userId = Convert.ToInt32(gvUsers.DataKeys[e.RowIndex].Value);
+            // Fired conditionally if default delete commands occur (we bypass this normally via return false)
+        }
 
-            DatabaseHelper db = new DatabaseHelper();
-            
-            // Prevent Admin from deleting themselves
-            DataTable dt = db.GetUserByUsername(Session["Username"].ToString());
-            if (dt != null && dt.Rows.Count > 0)
+        protected void btnConfirmDeleteYes_Click(object sender, EventArgs e)
+        {
+            // Hide confirmation panel
+            pnlDeleteConfirm.Style["display"] = "none";
+            lblNotification.Visible = false;
+
+            if (!string.IsNullOrEmpty(hfDeleteUserId.Value))
             {
-                int currentUserId = Convert.ToInt32(dt.Rows[0]["UserID"]);
-                if (userId == currentUserId)
+                int userId = Convert.ToInt32(hfDeleteUserId.Value);
+                DatabaseHelper db = new DatabaseHelper();
+
+                // Prevent Admin from deleting themselves
+                DataTable dt = db.GetUserByUsername(Session["Username"].ToString());
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    Response.Write("<script>alert('You cannot delete your own account from the database manager!');</script>");
-                    return;
+                    int currentUserId = Convert.ToInt32(dt.Rows[0]["UserID"]);
+                    if (userId == currentUserId)
+                    {
+                        lblNotification.InnerText = "You cannot delete your own account from the database manager!";
+                        lblNotification.Attributes["class"] = "error-message";
+                        lblNotification.Visible = true;
+                        return;
+                    }
                 }
-            }
 
-            bool success = db.DeleteUser(userId);
-            if (success)
-            {
-                BindUsersGrid();
-                Response.Write("<script>alert('Member deleted successfully!');</script>");
-            }
-            else
-            {
-                Response.Write("<script>alert('Failed to delete member.');</script>");
+                bool success = db.DeleteUser(userId);
+                if (success)
+                {
+                    BindUsersGrid();
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowDeleteSuccess", "showMessageModal('Delete succesfully!');", true);
+                }
+                else
+                {
+                    lblNotification.InnerText = "Failed to delete member.";
+                    lblNotification.Attributes["class"] = "error-message";
+                    lblNotification.Visible = true;
+                }
             }
         }
 

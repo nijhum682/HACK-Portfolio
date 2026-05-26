@@ -31,6 +31,7 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeMessage;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeAuthor;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeDate;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblAnnounceNotification;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -145,16 +146,19 @@ namespace project1
         {
             pnlAnnounceSection.Visible = !pnlAnnounceSection.Visible;
             pnlNoticeBoard.Visible = false; // Hide user panel if visible
+            lblAnnounceNotification.Visible = false;
         }
 
         protected void btnCancelAnnounce_Click(object sender, EventArgs e)
         {
             pnlAnnounceSection.Visible = false;
             txtAnnounceMessage.Value = "";
+            lblAnnounceNotification.Visible = false;
         }
 
         protected void btnSendAnnounce_Click(object sender, EventArgs e)
         {
+            lblAnnounceNotification.Visible = false;
             string message = txtAnnounceMessage.Value.Trim();
             if (!string.IsNullOrEmpty(message))
             {
@@ -164,16 +168,16 @@ namespace project1
                 {
                     txtAnnounceMessage.Value = "";
                     pnlAnnounceSection.Visible = false;
-                    Response.Write("<script>alert('Announcement posted successfully!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceSuccess", "showMessageModal('Your message is sent to all Users');", true);
                 }
                 else
                 {
-                    Response.Write("<script>alert('Failed to post announcement. Try again.');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceError", "showMessageModal('Failed to post announcement. Try again.');", true);
                 }
             }
             else
             {
-                Response.Write("<script>alert('Announcement message cannot be empty.');</script>");
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceEmpty", "showMessageModal('Announcement message cannot be empty.');", true);
             }
         }
 

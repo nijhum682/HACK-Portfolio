@@ -9,6 +9,7 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtUsername;
         protected global::System.Web.UI.HtmlControls.HtmlInputControl txtPassword;
         protected global::System.Web.UI.HtmlControls.HtmlButton btnSignIn;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNotification;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -32,6 +33,9 @@ namespace project1
             string username = txtUsername.Value.Trim();
             string password = txtPassword.Value.Trim();
 
+            // Clear previous notification
+            lblNotification.Visible = false;
+
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
                 DatabaseHelper db = new DatabaseHelper();
@@ -41,17 +45,17 @@ namespace project1
                 {
                     // Successful login
                     Session["Username"] = username;
-                    Response.Redirect("profile.aspx");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowSignInSuccess", "showMessageModalAndRedirect('Successfully Signing In', 'profile.aspx');", true);
                 }
                 else
                 {
                     // Unsuccessful login
-                    Response.Write("<script>alert('Invalid username or password!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowSignInError", "showMessageModal('Invalid username or password!');", true);
                 }
             }
             else
             {
-                Response.Write("<script>alert('Please fill out all fields.');</script>");
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowEmptyFieldsError", "showMessageModal('Please fill out all fields.');", true);
             }
         }
     }

@@ -39,15 +39,51 @@
                     </button>
                 </div>
                 <button type="submit" id="btnSignIn" runat="server" onserverclick="btnSignIn_Click" ClientIDMode="Static">Sign In</button>
+                <div id="lblNotification" runat="server" visible="false"></div>
                 <div style="margin-top: 1.5rem; text-align: center;">
                     <p style="color: var(--light); font-size: 1rem;">
                         Don't have an Account? <a href="signup.aspx" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
                     </p>
                 </div>
             </div>
+            <!-- Custom Message Modal Box -->
+            <div id="pnlMessageModal" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p id="lblMessageModalText" style="margin-bottom: 0; font-weight: 600; color: #fff; font-size: 1.1rem;"></p>
+            </div>
         </section>
 
         <script>
+            function showMessageModal(msg) {
+                const msgBox = document.getElementById('pnlMessageModal');
+                const msgText = document.getElementById('lblMessageModalText');
+                if (msgBox && msgText) {
+                    msgBox.style.borderColor = 'var(--accent)';
+                    msgBox.style.boxShadow = '0 10px 40px rgba(255, 0, 110, 0.4)';
+                    msgText.innerText = msg;
+                    msgBox.style.display = 'block';
+                    setTimeout(function() {
+                        msgBox.style.display = 'none';
+                    }, 5000);
+                }
+            }
+
+            function showMessageModalAndRedirect(msg, redirectUrl) {
+                const msgBox = document.getElementById('pnlMessageModal');
+                const msgText = document.getElementById('lblMessageModalText');
+                if (msgBox && msgText) {
+                    msgBox.style.borderColor = 'var(--primary)';
+                    msgBox.style.boxShadow = '0 10px 40px rgba(0, 212, 255, 0.4)';
+                    msgText.innerText = msg;
+                    msgBox.style.display = 'block';
+                    setTimeout(function() {
+                        msgBox.style.display = 'none';
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                } else {
+                    window.location.href = redirectUrl;
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
                 const toggleBtn = document.getElementById('btnTogglePassword');
                 const passwordInput = document.getElementById('txtPassword');

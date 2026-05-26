@@ -20,6 +20,7 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton radAdmin;
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox agreeCheckbox;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl signupMessage;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNotification;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -39,6 +40,9 @@ namespace project1
             string mobile = txtmobile.Value.Trim();
             string reason = txtReason.Value.Trim();
             string userType = radAdmin.Checked ? "Admin" : "User";
+
+            // Clear previous notification
+            lblNotification.Visible = false;
 
             // Simple validation
             if (!string.IsNullOrEmpty(name) && 
@@ -70,28 +74,28 @@ namespace project1
 
                 if (password.Length < 6 || !hasSpecialChar)
                 {
-                    Response.Write("<script>alert('Password must be at least 6 characters long and contain at least one special character!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowPassError", "showMessageModal('Password must be at least 6 characters long and contain at least one special character!');", true);
                     return;
                 }
 
                 // Check if username already exists
                 if (db.CheckUsernameTaken(username))
                 {
-                    Response.Write("<script>alert('Username is already taken!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowUserTakenError", "showMessageModal('Username is already taken!');", true);
                     return;
                 }
 
                 // Check if roll number already exists
                 if (db.CheckUsernameExists(roll))
                 {
-                    Response.Write("<script>alert('Roll number is already registered!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowRollTakenError", "showMessageModal('Roll number is already registered!');", true);
                     return;
                 }
 
                 // Check if email already exists
                 if (db.CheckEmailExists(email))
                 {
-                    Response.Write("<script>alert('Email is already registered!');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowEmailTakenError", "showMessageModal('Email is already registered!');", true);
                     return;
                 }
 
@@ -102,15 +106,16 @@ namespace project1
                     // Hide the form and show the success message
                     signupForm.Visible = false;
                     signupMessage.Visible = true;
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowSignUpSuccess", "showMessageModalAndRedirect('Successfully Signing Up', 'signin.aspx');", true);
                 }
                 else
                 {
-                    Response.Write("<script>alert('An error occurred during registration. Please try again.');</script>");
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowRegError", "showMessageModal('An error occurred during registration. Please try again.');", true);
                 }
             }
             else
             {
-                Response.Write("<script>alert('Please fill out all fields and check the agreement checkbox.');</script>");
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowEmptyFieldsError", "showMessageModal('Please fill out all fields and check the agreement checkbox.');", true);
             }
         }
     }

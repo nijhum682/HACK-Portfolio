@@ -69,13 +69,50 @@
                     <span>I must agree with the rules and policies of this club ensuring all the information that I have provided is correct.</span>
                 </label>
                 <button type="submit" id="btnSignUp" runat="server" onserverclick="btnSignUp_Click" ClientIDMode="Static">Sign Up</button>
+                <div id="lblNotification" runat="server" visible="false" ClientIDMode="Static"></div>
             </div>
             <div id="signupMessage" class="success-message" runat="server" visible="false">
                 Successfully signed up! 
             </div>
+
+            <!-- Custom Message Modal Box -->
+            <div id="pnlMessageModal" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p id="lblMessageModalText" style="margin-bottom: 0; font-weight: 600; color: #fff; font-size: 1.1rem;"></p>
+            </div>
         </section>
 
         <script>
+            function showMessageModal(msg) {
+                const msgBox = document.getElementById('pnlMessageModal');
+                const msgText = document.getElementById('lblMessageModalText');
+                if (msgBox && msgText) {
+                    msgBox.style.borderColor = 'var(--accent)';
+                    msgBox.style.boxShadow = '0 10px 40px rgba(255, 0, 110, 0.4)';
+                    msgText.innerText = msg;
+                    msgBox.style.display = 'block';
+                    setTimeout(function() {
+                        msgBox.style.display = 'none';
+                    }, 5000);
+                }
+            }
+
+            function showMessageModalAndRedirect(msg, redirectUrl) {
+                const msgBox = document.getElementById('pnlMessageModal');
+                const msgText = document.getElementById('lblMessageModalText');
+                if (msgBox && msgText) {
+                    msgBox.style.borderColor = 'var(--primary)';
+                    msgBox.style.boxShadow = '0 10px 40px rgba(0, 212, 255, 0.4)';
+                    msgText.innerText = msg;
+                    msgBox.style.display = 'block';
+                    setTimeout(function() {
+                        msgBox.style.display = 'none';
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                } else {
+                    window.location.href = redirectUrl;
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
                 const toggleBtn = document.getElementById('btnTogglePassword');
                 const passwordInput = document.getElementById('txtPassword');
@@ -104,7 +141,7 @@
                     const pwd = passwordInput.value;
                     const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/;
                     if (pwd.length < 6 || !specialCharRegex.test(pwd)) {
-                        alert("Password must be at least 6 characters long and contain at least one special character!");
+                        showMessageModal("Password must be at least 6 characters long and contain at least one special character!");
                         return false;
                     }
                     return true;

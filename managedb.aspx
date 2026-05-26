@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="managedb.aspx.cs" Inherits="project1.managedb" MasterPageFile="~/Site.Master" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="managedb.aspx.cs" Inherits="project1.managedb" MasterPageFile="~/Site.Master" MaintainScrollPositionOnPostback="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
         <section id="managedb" class="hero">
@@ -67,18 +67,93 @@
                                 </asp:DropDownList>
                             </EditItemTemplate>
                         </asp:TemplateField>
-                        <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" 
-                            ButtonType="Button" 
-                            EditText="Edit" UpdateText="Save" CancelText="Cancel" DeleteText="Delete"
-                            ControlStyle-CssClass="grid-btn" />
+                        <asp:TemplateField HeaderText="Actions">
+                            <ItemTemplate>
+                                <asp:Button ID="btnEdit" runat="server" CommandName="Edit" Text="Edit" CssClass="grid-btn" />
+                                <asp:Button ID="btnDelete" runat="server" Text="Delete" CssClass="grid-btn" 
+                                    OnClientClick='<%# "showDeleteConfirm(" + Eval("UserID") + "); return false;" %>' />
+                            </ItemTemplate>
+                            <EditItemTemplate>
+                                <asp:Button ID="btnUpdate" runat="server" CommandName="Update" Text="Save" CssClass="grid-btn" />
+                                <asp:Button ID="btnCancel" runat="server" CommandName="Cancel" Text="Cancel" CssClass="grid-btn" />
+                            </EditItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
+                <div id="lblNotification" runat="server" visible="false" ClientIDMode="Static"></div>
             </div>
 
+            <!-- Custom Delete Confirmation Box (Placed outside profile-card to prevent layout/transform issues) -->
+            <div id="pnlDeleteConfirm" runat="server" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p style="margin-bottom: 1.5rem; font-weight: 600; color: #fff; font-size: 1.1rem;">Do you want to delete this record?</p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <asp:Button ID="btnConfirmDeleteYes" runat="server" Text="Yes" CssClass="grid-btn" OnClick="btnConfirmDeleteYes_Click" style="padding: 8px 25px; border-radius: 20px;" />
+                    <button type="button" class="grid-btn" onclick="closeDeleteConfirm();" style="padding: 8px 25px; border-radius: 20px; border-color: var(--light); color: #fff;">No</button>
+                </div>
+                <asp:HiddenField ID="hfDeleteUserId" runat="server" ClientIDMode="Static" />
+            </div>
 
+            <!-- Custom Message Modal Box (Placed outside profile-card to prevent layout/transform issues) -->
+            <div id="pnlMessageModal" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p id="lblMessageModalText" style="margin-bottom: 0; font-weight: 600; color: #fff; font-size: 1.1rem;"></p>
+            </div>
+ 
             <div style="text-align: center; margin-bottom: 2rem;">
                 <a href="profile.aspx" class="btn btn-secondary">Back to Profile</a>
             </div>
+ 
+            <script>
+                function showDeleteConfirm(userId) {
+                    // Clear any other notifications
+                    const notification = document.getElementById('lblNotification');
+                    if (notification) notification.style.display = 'none';
+                    const msgBox = document.getElementById('pnlMessageModal');
+                    if (msgBox) msgBox.style.display = 'none';
+ 
+                    const confirmBox = document.getElementById('pnlDeleteConfirm');
+                    const hiddenField = document.getElementById('hfDeleteUserId');
+                    if (confirmBox && hiddenField) {
+                        hiddenField.value = userId;
+                        confirmBox.style.display = 'block';
+                    }
+                }
+ 
+                function closeDeleteConfirm() {
+                    const confirmBox = document.getElementById('pnlDeleteConfirm');
+                    if (confirmBox) {
+                        confirmBox.style.display = 'none';
+                    }
+                }
 
+                function showMessageModal(msg) {
+                    // Hide delete confirmation box if visible
+                    const confirmBox = document.getElementById('pnlDeleteConfirm');
+                    if (confirmBox) confirmBox.style.display = 'none';
+                    const notification = document.getElementById('lblNotification');
+                    if (notification) notification.style.display = 'none';
+
+                    const msgBox = document.getElementById('pnlMessageModal');
+                    const msgText = document.getElementById('lblMessageModalText');
+                    if (msgBox && msgText) {
+                        msgText.innerText = msg;
+                        msgBox.style.display = 'block';
+                        setTimeout(function() {
+                            msgBox.style.display = 'none';
+                        }, 5000);
+                    }
+                }
+ 
+                document.addEventListener('DOMContentLoaded', function() {
+                    const notification = document.getElementById('lblNotification');
+                    if (notification && notification.innerText.trim() !== '') {
+                        if (notification.innerText.includes('updated') || notification.innerText.includes('Successful!') || notification.innerText.includes('Edit') || notification.innerText.includes('Delete')) {
+                            setTimeout(function() {
+                                notification.style.display = 'none';
+                            }, 5000);
+                        }
+                    }
+                });
+            </script>
+ 
         </section>
 </asp:Content>
