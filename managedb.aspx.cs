@@ -79,15 +79,15 @@ namespace project1
             int rowIndex = e.RowIndex;
             int userId = Convert.ToInt32(gvUsers.DataKeys[rowIndex].Value);
 
-            // Bounds matching columns layout
+            // Bounds matching columns layout (Password column removed, shifting indices)
             string name = ((TextBox)gvUsers.Rows[rowIndex].Cells[1].Controls[0]).Text.Trim();
-            string password = ((TextBox)gvUsers.Rows[rowIndex].Cells[3].Controls[0]).Text.Trim();
-            string email = ((TextBox)gvUsers.Rows[rowIndex].Cells[4].Controls[0]).Text.Trim();
-            string roll = ((TextBox)gvUsers.Rows[rowIndex].Cells[5].Controls[0]).Text.Trim();
-            string batch = ((TextBox)gvUsers.Rows[rowIndex].Cells[6].Controls[0]).Text.Trim();
-            string department = ((TextBox)gvUsers.Rows[rowIndex].Cells[7].Controls[0]).Text.Trim();
-            string university = ((TextBox)gvUsers.Rows[rowIndex].Cells[8].Controls[0]).Text.Trim();
-            string phone = ((TextBox)gvUsers.Rows[rowIndex].Cells[9].Controls[0]).Text.Trim();
+            string username = gvUsers.Rows[rowIndex].Cells[2].Text.Trim();
+            string email = ((TextBox)gvUsers.Rows[rowIndex].Cells[3].Controls[0]).Text.Trim();
+            string roll = ((TextBox)gvUsers.Rows[rowIndex].Cells[4].Controls[0]).Text.Trim();
+            string batch = ((TextBox)gvUsers.Rows[rowIndex].Cells[5].Controls[0]).Text.Trim();
+            string department = ((TextBox)gvUsers.Rows[rowIndex].Cells[6].Controls[0]).Text.Trim();
+            string university = ((TextBox)gvUsers.Rows[rowIndex].Cells[7].Controls[0]).Text.Trim();
+            string phone = ((TextBox)gvUsers.Rows[rowIndex].Cells[8].Controls[0]).Text.Trim();
 
             DropDownList ddlUserType = (DropDownList)gvUsers.Rows[rowIndex].FindControl("ddlUserType");
             string userType = ddlUserType != null ? ddlUserType.SelectedValue : "User";
@@ -95,6 +95,15 @@ namespace project1
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(roll))
             {
                 DatabaseHelper db = new DatabaseHelper();
+                
+                // Fetch the current password from database since it is no longer shown in the grid
+                string password = "";
+                DataTable dtUser = db.GetUserByUsername(username);
+                if (dtUser != null && dtUser.Rows.Count > 0)
+                {
+                    password = dtUser.Rows[0]["Password"].ToString();
+                }
+
                 bool success = db.UpdateUser(userId, name, email, roll, batch, department, university, phone, userType, password);
                 if (success)
                 {

@@ -63,7 +63,7 @@
                     msgBox.style.display = 'block';
                     setTimeout(function() {
                         msgBox.style.display = 'none';
-                    }, 5000);
+                    }, 2000);
                 }
             }
 

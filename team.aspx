@@ -275,7 +275,7 @@
                     <p>Senior Executive</p>
                 </div>
                 <div class="team-member" data-designation="Senior Executive">
-                    <img src="img/Sulaiman.jpeg" alt="MD. Sulaiman" class="team-photo">
+                    <img src="img/Suli.jpeg" alt="MD. Sulaiman" class="team-photo">
                     <h3>MD. Sulaiman</h3>
                     <p>Senior Executive</p>
                 </div>
@@ -341,8 +341,8 @@
                     <p>Junior Executive</p>
                 </div>
                 <div class="team-member" data-designation="Junior Executive">
-                    <img src="img/Raju.HEIC" alt="Raju Sarker" class="team-photo">
-                    <h3>Raju Sarker</h3>
+                    <img src="img/Wafi.jpeg" alt="Samun Sadab Wafi" class="team-photo">
+                    <h3>Samun Sadab Wafi</h3>
                     <p>Junior Executive</p>
                 </div>
                 <div class="team-member" data-designation="Junior Executive">

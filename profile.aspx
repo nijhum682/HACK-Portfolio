@@ -102,11 +102,67 @@
                     </div>
                 </div>
 
-                <div class="profile-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-                    <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
-                    <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
-                    <asp:Button ID="btnSeeNotice" runat="server" Text="See Notice" CssClass="btn btn-secondary" OnClick="btnSeeNotice_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
-                    <a href="signin.aspx?action=signout" class="btn btn-secondary" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;">Sign Out</a>
+                <div class="profile-actions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
+                    <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
+                    <asp:Button ID="btnSeeNotice" runat="server" Text="See Notice" CssClass="btn btn-secondary" OnClick="btnSeeNotice_Click" Visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
+                    <asp:Button ID="btnEditProfile" runat="server" Text="Edit Profile" CssClass="btn btn-secondary" OnClick="btnEditProfile_Click" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
+                    <a href="signin.aspx?action=signout" class="btn btn-secondary" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Sign Out</a>
+                </div>
+            </div>
+
+            <!-- Edit Profile Mode -->
+            <div id="pnlEditProfile" runat="server" class="profile-card" visible="false">
+                <div class="profile-header">
+                    <h2 style="color: var(--primary); text-align: left; margin-bottom: 0;">Edit Profile</h2>
+                </div>
+                <div class="custom-form" style="max-width: 100%; margin-top: 2rem;">
+                    <div class="profile-details-grid">
+                        <div class="detail-item">
+                            <label>Full Name</label>
+                            <input type="text" id="editName" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Email Address</label>
+                            <input type="email" id="editEmail" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Roll Number</label>
+                            <input type="text" id="editRoll" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Batch</label>
+                            <input type="text" id="editBatch" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Department</label>
+                            <input type="text" id="editDept" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>University</label>
+                            <input type="text" id="editUni" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone Number</label>
+                            <input type="text" id="editPhone" runat="server" required />
+                        </div>
+                        <div class="detail-item">
+                            <label>Username (Read-Only)</label>
+                            <input type="text" id="editUsername" runat="server" readonly="readonly" style="background: rgba(255,255,255,0.01); color: var(--light); border-color: rgba(255,255,255,0.02);" />
+                        </div>
+                        <div class="detail-item">
+                            <label>Enter New Password (optional)</label>
+                            <input type="password" id="editPassword" runat="server" placeholder="Leave blank to keep current" ClientIDMode="Static" />
+                        </div>
+                        <div class="detail-item">
+                            <label>Confirm New Password</label>
+                            <input type="password" id="editConfirmPassword" runat="server" placeholder="Leave blank to keep current" ClientIDMode="Static" />
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                        <asp:Button ID="btnSaveProfile" runat="server" Text="Save Changes" CssClass="btn btn-primary" OnClick="btnSaveProfile_Click" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" ClientIDMode="Static" />
+                        <asp:Button ID="btnCancelEditProfile" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancelEditProfile_Click" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" UseSubmitBehavior="false" />
+                    </div>
                 </div>
             </div>
 
@@ -142,9 +198,37 @@
                         msgBox.style.display = 'block';
                         setTimeout(function() {
                             msgBox.style.display = 'none';
-                        }, 5000);
+                        }, 2000);
                     }
                 }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const btnSave = document.getElementById('btnSaveProfile');
+                    const passwordInput = document.getElementById('editPassword');
+                    const confirmInput = document.getElementById('editConfirmPassword');
+
+                    if (btnSave && passwordInput && confirmInput) {
+                        btnSave.addEventListener('click', (e) => {
+                            const pwd = passwordInput.value;
+                            const cpwd = confirmInput.value;
+
+                            if (pwd || cpwd) {
+                                if (pwd !== cpwd) {
+                                    showMessageModal("Passwords do not match!");
+                                    e.preventDefault();
+                                    return false;
+                                }
+                                const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/;
+                                if (pwd.length < 6 || !specialCharRegex.test(pwd)) {
+                                    showMessageModal("Password must be at least 6 characters long and contain at least one special character!");
+                                    e.preventDefault();
+                                    return false;
+                                }
+                            }
+                            return true;
+                        });
+                    }
+                });
             </script>
 
         </section>

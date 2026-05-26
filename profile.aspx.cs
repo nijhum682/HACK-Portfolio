@@ -32,6 +32,22 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeAuthor;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeDate;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblAnnounceNotification;
+ 
+        // Edit Profile Controls
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlEditProfile;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editEmail;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editRoll;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editBatch;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editDept;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editUni;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editPhone;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editUsername;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editPassword;
+        protected global::System.Web.UI.HtmlControls.HtmlInputControl editConfirmPassword;
+        protected global::System.Web.UI.WebControls.Button btnEditProfile;
+        protected global::System.Web.UI.WebControls.Button btnSaveProfile;
+        protected global::System.Web.UI.WebControls.Button btnCancelEditProfile;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -210,6 +226,140 @@ namespace project1
                     lblNoticeMessage.InnerText = "No announcements posted yet.";
                     lblNoticeAuthor.InnerText = "System";
                     lblNoticeDate.InnerText = "";
+                }
+            }
+        }
+
+        protected void btnEditProfile_Click(object sender, EventArgs e)
+        {
+            if (Session["Username"] != null)
+            {
+                DatabaseHelper db = new DatabaseHelper();
+                DataTable dt = db.GetUserByUsername(Session["Username"].ToString());
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+                    editName.Value = row["Name"].ToString();
+                    editEmail.Value = row["Email"].ToString();
+                    editRoll.Value = row["Roll"].ToString();
+                    editBatch.Value = row["Batch"].ToString();
+                    editDept.Value = row["Department"].ToString();
+                    editUni.Value = row["University"].ToString();
+                    editPhone.Value = row["Phone"] != DBNull.Value ? row["Phone"].ToString() : "";
+                    editUsername.Value = row["Username"].ToString();
+
+                    editPassword.Value = "";
+                    editConfirmPassword.Value = "";
+
+                    pnlProfile.Visible = false;
+                    pnlEditProfile.Visible = true;
+                }
+            }
+        }
+
+        protected void btnCancelEditProfile_Click(object sender, EventArgs e)
+        {
+            pnlProfile.Visible = true;
+            pnlEditProfile.Visible = false;
+            if (Session["Username"] != null)
+            {
+                LoadUserProfile(Session["Username"].ToString());
+            }
+        }
+
+        protected void btnSaveProfile_Click(object sender, EventArgs e)
+        {
+            if (Session["Username"] != null)
+            {
+                string name = editName.Value.Trim();
+                string email = editEmail.Value.Trim();
+                string roll = editRoll.Value.Trim();
+                string batch = editBatch.Value.Trim();
+                string department = editDept.Value.Trim();
+                string university = editUni.Value.Trim();
+                string phone = editPhone.Value.Trim();
+                string newPassword = editPassword.Value.Trim();
+                string confirmPassword = editConfirmPassword.Value.Trim();
+
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(roll) || 
+                    string.IsNullOrEmpty(batch) || string.IsNullOrEmpty(department) || string.IsNullOrEmpty(university))
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "FieldsRequired", "showMessageModal('Please fill out all required fields.');", true);
+                    return;
+                }
+
+                DatabaseHelper db = new DatabaseHelper();
+                DataTable dt = db.GetUserByUsername(Session["Username"].ToString());
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    int userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
+                    string currentEmail = dt.Rows[0]["Email"].ToString();
+                    string currentRoll = dt.Rows[0]["Roll"].ToString();
+                    string currentPassword = dt.Rows[0]["Password"].ToString();
+                    string currentUserType = dt.Rows[0]["UserType"].ToString();
+
+                    // If email changed, check uniqueness
+                    if (!email.Equals(currentEmail, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (db.CheckEmailExists(email))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "EmailExists", "showMessageModal('Email is already registered by another user!');", true);
+                            return;
+                        }
+                    }
+
+                    // If roll changed, check uniqueness
+                    if (!roll.Equals(currentRoll, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (db.CheckUsernameExists(roll))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "RollExists", "showMessageModal('Roll number is already registered by another user!');", true);
+                            return;
+                        }
+                    }
+
+                    string finalPassword = currentPassword;
+                    if (!string.IsNullOrEmpty(newPassword))
+                    {
+                        if (newPassword != confirmPassword)
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "PasswordMismatch", "showMessageModal('Passwords do not match!');", true);
+                            return;
+                        }
+
+                        // Validate password complexity
+                        bool hasSpecialChar = false;
+                        string specialCharacters = @"!@#$%^&*()_+-=[]{}|;':"",./<>?~`";
+                        foreach (char c in newPassword)
+                        {
+                            if (specialCharacters.IndexOf(c) >= 0)
+                            {
+                                hasSpecialChar = true;
+                                break;
+                            }
+                        }
+
+                        if (newPassword.Length < 6 || !hasSpecialChar)
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "PassLengthError", "showMessageModal('Password must be at least 6 characters long and contain at least one special character!');", true);
+                            return;
+                        }
+
+                        finalPassword = newPassword;
+                    }
+
+                    bool success = db.UpdateUser(userId, name, email, roll, batch, department, university, phone, currentUserType, finalPassword);
+                    if (success)
+                    {
+                        pnlEditProfile.Visible = false;
+                        pnlProfile.Visible = true;
+                        LoadUserProfile(Session["Username"].ToString());
+                        ClientScript.RegisterStartupScript(this.GetType(), "UpdateSuccess", "showMessageModal('Profile updated successfully!');", true);
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "UpdateError", "showMessageModal('An error occurred while updating profile.');", true);
+                    }
                 }
             }
         }

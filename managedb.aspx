@@ -47,7 +47,6 @@
                         <asp:BoundField DataField="UserID" HeaderText="ID" ReadOnly="True" SortExpression="UserID" />
                         <asp:BoundField DataField="Name" HeaderText="Name" />
                         <asp:BoundField DataField="Username" HeaderText="Username" ReadOnly="True" />
-                        <asp:BoundField DataField="Password" HeaderText="Password" />
                         <asp:BoundField DataField="Email" HeaderText="Email" />
                         <asp:BoundField DataField="Roll" HeaderText="Roll" />
                         <asp:BoundField DataField="Batch" HeaderText="Batch" />
@@ -139,17 +138,17 @@
                         msgBox.style.display = 'block';
                         setTimeout(function() {
                             msgBox.style.display = 'none';
-                        }, 5000);
+                        }, 2000);
                     }
                 }
  
                 document.addEventListener('DOMContentLoaded', function() {
                     const notification = document.getElementById('lblNotification');
                     if (notification && notification.innerText.trim() !== '') {
-                        if (notification.innerText.includes('updated') || notification.innerText.includes('Successful!') || notification.innerText.includes('Edit') || notification.innerText.includes('Delete')) {
+                        if (notification.innerText.includes('updated') || notification.innerText.includes('Successful') || notification.innerText.includes('Edit') || notification.innerText.includes('Delete')) {
                             setTimeout(function() {
                                 notification.style.display = 'none';
-                            }, 5000);
+                            }, 2000);
                         }
                     }
                 });
