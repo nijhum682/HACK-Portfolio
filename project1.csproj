@@ -66,6 +66,7 @@
     <Content Include="activities.aspx" />
     <Content Include="contact.aspx" />
     <Content Include="index.aspx" />
+    <Content Include="managedb.aspx" />
     <Content Include="profile.aspx" />
     <Content Include="resources.aspx" />
     <Content Include="signin.aspx" />
@@ -99,6 +100,10 @@
     </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="managedb.aspx.cs">
+      <DependentUpon>managedb.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="profile.aspx.cs">

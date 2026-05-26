@@ -76,9 +76,36 @@
                         <span id="lblDateRegistered" runat="server">May 25, 2026</span>
                     </div>
                 </div>
+                
+                <!-- Admin Announcement Section -->
+                <div id="pnlAnnounceSection" runat="server" class="admin-announce-section" visible="false" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: left;">Post New Announcement</h3>
+                    <div class="custom-form" style="max-width: 100%;">
+                        <textarea id="txtAnnounceMessage" runat="server" rows="4" placeholder="Type your notice or announcement here... (sent to all club users)" required style="width: 100%; box-sizing: border-box; padding: 1rem; border: 1px solid #1a1a1a; background: rgba(255, 255, 255, 0.05); color: #fff; border-radius: 5px; font-family: inherit; font-size: 1rem; margin-bottom: 1rem;"></textarea>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <asp:Button ID="btnSendAnnounce" runat="server" Text="Send Announcement" CssClass="btn btn-primary" OnClick="btnSendAnnounce_Click" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
+                            <asp:Button ID="btnCancelAnnounce" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancelAnnounce_Click" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" UseSubmitBehavior="false" />
+                        </div>
+                    </div>
+                </div>
 
-                <div class="profile-actions">
-                    <a href="signin.aspx?action=signout" class="btn btn-secondary">Sign Out</a>
+                <!-- User Notice Board Section -->
+                <div id="pnlNoticeBoard" runat="server" class="user-notice-section" visible="false" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: left;">Announcement from Admin</h3>
+                    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); padding: 1.5rem; border-radius: 10px; text-align: left;">
+                        <p id="lblNoticeMessage" runat="server" style="font-size: 1.1rem; color: #fff; line-height: 1.6; margin-bottom: 1rem; white-space: pre-wrap;">No announcements posted yet.</p>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--light);">
+                            <span>Posted by: <strong id="lblNoticeAuthor" runat="server" style="color: var(--primary);">Admin</strong></span>
+                            <span id="lblNoticeDate" runat="server">May 25, 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions" style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
+                    <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
+                    <asp:Button ID="btnSeeNotice" runat="server" Text="See Notice" CssClass="btn btn-secondary" OnClick="btnSeeNotice_Click" Visible="false" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;" />
+                    <a href="signin.aspx?action=signout" class="btn btn-secondary" style="padding: 10px 25px; border-radius: 50px; font-size: 0.95rem;">Sign Out</a>
                 </div>
             </div>
 

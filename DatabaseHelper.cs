@@ -100,6 +100,20 @@ namespace project1
                         cmd.ExecuteNonQuery();
                     }
 
+                    // Create Announcements Table
+                    string createAnnouncementsTable = @"
+                        CREATE TABLE IF NOT EXISTS Announcements (
+                            AnnouncementID INT AUTO_INCREMENT PRIMARY KEY,
+                            Message TEXT NOT NULL,
+                            CreatedBy VARCHAR(100) NOT NULL,
+                            DateCreated DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );";
+
+                    using (MySqlCommand cmd = new MySqlCommand(createAnnouncementsTable, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
                     // Check if Phone column exists in Users table, and add it if it doesn't
                     string checkPhoneColumnQuery = "SHOW COLUMNS FROM Users LIKE 'Phone';";
                     bool phoneColumnExists = false;
@@ -462,7 +476,7 @@ namespace project1
                 using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
                     string query = @"SELECT UserID, Name, Username, Password, Email, Roll, Batch, Department, University, Phone, UserType, DateRegistered, IsActive 
-                                   FROM Users ORDER BY DateRegistered DESC";
+                                   FROM Users ORDER BY UserID ASC";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
@@ -584,6 +598,96 @@ namespace project1
                 LogError("GetUserByUsername", ex);
                 System.Diagnostics.Debug.WriteLine("Error getting user by username: " + ex.Message);
                 return null;
+            }
+        }
+
+        public bool InsertAnnouncement(string message, string createdBy)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "INSERT INTO Announcements (Message, CreatedBy) VALUES (@message, @createdBy)";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@message", message);
+                        cmd.Parameters.AddWithValue("@createdBy", createdBy);
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("InsertAnnouncement", ex);
+                System.Diagnostics.Debug.WriteLine("Error inserting announcement: " + ex.Message);
+                return false;
+            }
+        }
+
+        public DataTable GetLatestAnnouncement()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT Message, CreatedBy, DateCreated FROM Announcements ORDER BY DateCreated DESC LIMIT 1";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("GetLatestAnnouncement", ex);
+                System.Diagnostics.Debug.WriteLine("Error getting latest announcement: " + ex.Message);
+                return null;
+            }
+        }
+
+        public bool UpdateUser(int userId, string name, string email, string roll, string batch, string department, string university, string phone, string userType, string password)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = @"UPDATE Users 
+                                   SET Name = @name, Email = @email, Roll = @roll, Batch = @batch, 
+                                       Department = @department, University = @university, Phone = @phone, UserType = @userType, Password = @password
+                                   WHERE UserID = @userId";
+                    
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@email", email);
+                        cmd.Parameters.AddWithValue("@roll", roll);
+                        cmd.Parameters.AddWithValue("@batch", batch);
+                        cmd.Parameters.AddWithValue("@department", department);
+                        cmd.Parameters.AddWithValue("@university", university);
+                        cmd.Parameters.AddWithValue("@phone", phone ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@userType", userType);
+                        cmd.Parameters.AddWithValue("@password", password);
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("UpdateUser", ex);
+                System.Diagnostics.Debug.WriteLine("Error updating user: " + ex.Message);
+                return false;
             }
         }
 

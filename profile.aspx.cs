@@ -19,6 +19,18 @@ namespace project1
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblPhone;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblDateRegistered;
 
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkManageDb;
+        protected global::System.Web.UI.WebControls.Button btnShowAnnounce;
+        protected global::System.Web.UI.WebControls.Button btnSeeNotice;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlAnnounceSection;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea txtAnnounceMessage;
+        protected global::System.Web.UI.WebControls.Button btnSendAnnounce;
+        protected global::System.Web.UI.WebControls.Button btnCancelAnnounce;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlNoticeBoard;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeMessage;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeAuthor;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeDate;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Username"] == null)
@@ -71,10 +83,16 @@ namespace project1
                 if (userType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                 {
                     lblUserTypeBadge.Attributes["class"] = "badge-admin";
+                    lnkManageDb.Visible = true;
+                    btnShowAnnounce.Visible = true;
+                    btnSeeNotice.Visible = false;
                 }
                 else
                 {
                     lblUserTypeBadge.Attributes["class"] = "badge-user";
+                    lnkManageDb.Visible = false;
+                    btnShowAnnounce.Visible = false;
+                    btnSeeNotice.Visible = true;
                 }
 
                 // Details
@@ -104,6 +122,75 @@ namespace project1
                 Session.Abandon();
                 pnlProfile.Visible = false;
                 pnlAnonymous.Visible = true;
+            }
+        }
+
+        protected void btnShowAnnounce_Click(object sender, EventArgs e)
+        {
+            pnlAnnounceSection.Visible = !pnlAnnounceSection.Visible;
+            pnlNoticeBoard.Visible = false; // Hide user panel if visible
+        }
+
+        protected void btnCancelAnnounce_Click(object sender, EventArgs e)
+        {
+            pnlAnnounceSection.Visible = false;
+            txtAnnounceMessage.Value = "";
+        }
+
+        protected void btnSendAnnounce_Click(object sender, EventArgs e)
+        {
+            string message = txtAnnounceMessage.Value.Trim();
+            if (!string.IsNullOrEmpty(message))
+            {
+                DatabaseHelper db = new DatabaseHelper();
+                bool success = db.InsertAnnouncement(message, Session["Username"].ToString());
+                if (success)
+                {
+                    txtAnnounceMessage.Value = "";
+                    pnlAnnounceSection.Visible = false;
+                    Response.Write("<script>alert('Announcement posted successfully!');</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Failed to post announcement. Try again.');</script>");
+                }
+            }
+            else
+            {
+                Response.Write("<script>alert('Announcement message cannot be empty.');</script>");
+            }
+        }
+
+        protected void btnSeeNotice_Click(object sender, EventArgs e)
+        {
+            pnlNoticeBoard.Visible = !pnlNoticeBoard.Visible;
+            pnlAnnounceSection.Visible = false; // Hide admin panel if visible
+
+            if (pnlNoticeBoard.Visible)
+            {
+                DatabaseHelper db = new DatabaseHelper();
+                DataTable dt = db.GetLatestAnnouncement();
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    lblNoticeMessage.InnerText = dt.Rows[0]["Message"].ToString();
+                    lblNoticeAuthor.InnerText = dt.Rows[0]["CreatedBy"].ToString();
+                    
+                    if (dt.Rows[0]["DateCreated"] != DBNull.Value)
+                    {
+                        DateTime date = Convert.ToDateTime(dt.Rows[0]["DateCreated"]);
+                        lblNoticeDate.InnerText = date.ToString("MMM dd, yyyy hh:mm tt");
+                    }
+                    else
+                    {
+                        lblNoticeDate.InnerText = "";
+                    }
+                }
+                else
+                {
+                    lblNoticeMessage.InnerText = "No announcements posted yet.";
+                    lblNoticeAuthor.InnerText = "System";
+                    lblNoticeDate.InnerText = "";
+                }
             }
         }
     }
