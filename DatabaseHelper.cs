@@ -653,6 +653,57 @@ namespace project1
             }
         }
 
+        public DataTable GetAllAnnouncements()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Announcements ORDER BY DateCreated DESC";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("GetAllAnnouncements", ex);
+                System.Diagnostics.Debug.WriteLine("Error getting announcements: " + ex.Message);
+                return null;
+            }
+        }
+
+        public bool DeleteAnnouncement(int announcementId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "DELETE FROM Announcements WHERE AnnouncementID = @id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", announcementId);
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("DeleteAnnouncement", ex);
+                System.Diagnostics.Debug.WriteLine("Error deleting announcement: " + ex.Message);
+                return false;
+            }
+        }
+
         public bool UpdateUser(int userId, string name, string email, string roll, string batch, string department, string university, string phone, string userType, string password)
         {
             try

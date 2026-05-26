@@ -77,6 +77,13 @@
                     </div>
                 </div>
                 
+                <div class="profile-actions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
+                    <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
+                    <asp:Button ID="btnEditProfile" runat="server" Text="Edit Profile" CssClass="btn btn-secondary" OnClick="btnEditProfile_Click" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
+                    <a href="signin.aspx?action=signout" class="btn btn-secondary" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Sign Out</a>
+                </div>
+
                 <!-- Admin Announcement Section -->
                 <div id="pnlAnnounceSection" runat="server" class="admin-announce-section" visible="false" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
                     <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: left;">Post New Announcement</h3>
@@ -91,23 +98,28 @@
                 </div>
 
                 <!-- User Notice Board Section -->
-                <div id="pnlNoticeBoard" runat="server" class="user-notice-section" visible="false" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: left;">Announcement from Admin</h3>
-                    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); padding: 1.5rem; border-radius: 10px; text-align: left;">
-                        <p id="lblNoticeMessage" runat="server" style="font-size: 1.1rem; color: #fff; line-height: 1.6; margin-bottom: 1rem; white-space: pre-wrap;">No announcements posted yet.</p>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--light);">
-                            <span>Posted by: <strong id="lblNoticeAuthor" runat="server" style="color: var(--primary);">Admin</strong></span>
-                            <span id="lblNoticeDate" runat="server">May 25, 2026</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-actions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-                    <a href="managedb.aspx" id="lnkManageDb" runat="server" class="btn btn-primary" visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Manage Database</a>
-                    <asp:Button ID="btnShowAnnounce" runat="server" Text="Announce" CssClass="btn btn-secondary" OnClick="btnShowAnnounce_Click" Visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
-                    <asp:Button ID="btnSeeNotice" runat="server" Text="See Notice" CssClass="btn btn-secondary" OnClick="btnSeeNotice_Click" Visible="false" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
-                    <asp:Button ID="btnEditProfile" runat="server" Text="Edit Profile" CssClass="btn btn-secondary" OnClick="btnEditProfile_Click" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;" />
-                    <a href="signin.aspx?action=signout" class="btn btn-secondary" style="padding: 8px 18px; border-radius: 50px; font-size: 0.95rem;">Sign Out</a>
+                <div id="pnlNoticeBoard" runat="server" class="user-notice-section" visible="true" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: left;">Announcements Notice Board</h3>
+                    <p id="lblNoNotices" runat="server" style="font-size: 1.1rem; color: #fff; line-height: 1.6; margin-bottom: 1rem; text-align: left;" visible="false"></p>
+                    <asp:Repeater ID="rptAnnouncements" runat="server">
+                        <ItemTemplate>
+                            <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); padding: 1.5rem; border-radius: 10px; text-align: left; margin-bottom: 1rem; position: relative;">
+                                
+                                <asp:Button ID="btnDeleteAnnounce" runat="server" 
+                                    Visible='<%# IsUserAdmin() %>'
+                                    Text="Delete" 
+                                    CssClass="btn btn-secondary"
+                                    style="position: absolute; top: 1.25rem; right: 1.5rem; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; border: 1px solid var(--accent); color: var(--accent); background: transparent; cursor: pointer;"
+                                    OnClientClick='<%# "showAnnounceDeleteConfirm(" + Eval("AnnouncementID") + "); return false;" %>' />
+                                
+                                <p style="font-size: 1.1rem; color: #fff; line-height: 1.6; margin-bottom: 1rem; white-space: pre-wrap; padding-right: 7rem;"><%# Eval("Message") %></p>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--light);">
+                                    <span>Posted by: <strong style="color: var(--primary);"><%# Eval("CreatedBy") %></strong></span>
+                                    <span><%# Eval("DateCreated", "{0:MMM dd, yyyy hh:mm tt}") %></span>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
                 </div>
             </div>
 
@@ -181,12 +193,37 @@
                     <a href="signup.aspx" class="btn btn-secondary">Create Account</a>
                 </div>
             </div>
+            <!-- Custom Announcement Delete Confirmation Box -->
+            <div id="pnlAnnounceDeleteConfirm" runat="server" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p style="margin-bottom: 1.5rem; font-weight: 600; color: #fff; font-size: 1.1rem;">Do you want to delete this announcement?</p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <asp:Button ID="btnConfirmAnnounceDeleteYes" runat="server" Text="Yes" CssClass="btn btn-primary" OnClick="btnConfirmAnnounceDeleteYes_Click" style="padding: 8px 25px; border-radius: 20px; font-size: 0.95rem; border: none; background: var(--accent); color: #fff;" />
+                    <button type="button" class="btn btn-secondary" onclick="closeAnnounceDeleteConfirm();" style="padding: 8px 25px; border-radius: 20px; font-size: 0.95rem; border: 1px solid var(--light); color: #fff; background: transparent; cursor: pointer;">No</button>
+                </div>
+                <asp:HiddenField ID="hfDeleteAnnounceId" runat="server" ClientIDMode="Static" />
+            </div>
+
             <!-- Custom Message Modal Box -->
             <div id="pnlMessageModal" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
                 <p id="lblMessageModalText" style="margin-bottom: 0; font-weight: 600; color: #fff; font-size: 1.1rem;"></p>
             </div>
 
             <script>
+                function showAnnounceDeleteConfirm(announceId) {
+                    const confirmBox = document.getElementById('pnlAnnounceDeleteConfirm');
+                    const hiddenField = document.getElementById('hfDeleteAnnounceId');
+                    if (confirmBox && hiddenField) {
+                        hiddenField.value = announceId;
+                        confirmBox.style.display = 'block';
+                    }
+                }
+
+                function closeAnnounceDeleteConfirm() {
+                    const confirmBox = document.getElementById('pnlAnnounceDeleteConfirm');
+                    if (confirmBox) {
+                        confirmBox.style.display = 'none';
+                    }
+                }
                 function showMessageModal(msg) {
                     const msgBox = document.getElementById('pnlMessageModal');
                     const msgText = document.getElementById('lblMessageModalText');

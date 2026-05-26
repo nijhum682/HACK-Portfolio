@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Web.UI.WebControls;
 
 namespace project1
 {
@@ -22,16 +23,17 @@ namespace project1
 
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkManageDb;
         protected global::System.Web.UI.WebControls.Button btnShowAnnounce;
-        protected global::System.Web.UI.WebControls.Button btnSeeNotice;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlAnnounceSection;
         protected global::System.Web.UI.HtmlControls.HtmlTextArea txtAnnounceMessage;
         protected global::System.Web.UI.WebControls.Button btnSendAnnounce;
         protected global::System.Web.UI.WebControls.Button btnCancelAnnounce;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlNoticeBoard;
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeMessage;
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeAuthor;
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoticeDate;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoNotices;
+        protected global::System.Web.UI.WebControls.Repeater rptAnnouncements;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblAnnounceNotification;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlAnnounceDeleteConfirm;
+        protected global::System.Web.UI.WebControls.Button btnConfirmAnnounceDeleteYes;
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteAnnounceId;
  
         // Edit Profile Controls
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlEditProfile;
@@ -66,7 +68,11 @@ namespace project1
                 if (!IsPostBack)
                 {
                     LoadUserProfile(Session["Username"].ToString());
+                    BindAnnouncements();
                 }
+
+                // Keep the notice board visible at all times
+                pnlNoticeBoard.Visible = true;
             }
         }
 
@@ -105,7 +111,6 @@ namespace project1
                     lblUserTypeBadge.Attributes["class"] = "badge-admin";
                     lnkManageDb.Visible = true;
                     btnShowAnnounce.Visible = true;
-                    btnSeeNotice.Visible = false;
                     titleText = "Admin Profile";
                 }
                 else
@@ -113,7 +118,6 @@ namespace project1
                     lblUserTypeBadge.Attributes["class"] = "badge-user";
                     lnkManageDb.Visible = false;
                     btnShowAnnounce.Visible = false;
-                    btnSeeNotice.Visible = true;
                 }
                 
                 // Dynamic Hero Title Spans
@@ -161,7 +165,6 @@ namespace project1
         protected void btnShowAnnounce_Click(object sender, EventArgs e)
         {
             pnlAnnounceSection.Visible = !pnlAnnounceSection.Visible;
-            pnlNoticeBoard.Visible = false; // Hide user panel if visible
             lblAnnounceNotification.Visible = false;
         }
 
@@ -185,6 +188,7 @@ namespace project1
                     txtAnnounceMessage.Value = "";
                     pnlAnnounceSection.Visible = false;
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceSuccess", "showMessageModal('Your message is sent to all Users');", true);
+                    BindAnnouncements();
                 }
                 else
                 {
@@ -197,38 +201,59 @@ namespace project1
             }
         }
 
-        protected void btnSeeNotice_Click(object sender, EventArgs e)
+        protected void btnConfirmAnnounceDeleteYes_Click(object sender, EventArgs e)
         {
-            pnlNoticeBoard.Visible = !pnlNoticeBoard.Visible;
-            pnlAnnounceSection.Visible = false; // Hide admin panel if visible
-
-            if (pnlNoticeBoard.Visible)
+            if (!string.IsNullOrEmpty(hfDeleteAnnounceId.Value))
             {
+                int announcementId = Convert.ToInt32(hfDeleteAnnounceId.Value);
                 DatabaseHelper db = new DatabaseHelper();
-                DataTable dt = db.GetLatestAnnouncement();
-                if (dt != null && dt.Rows.Count > 0)
+                bool success = db.DeleteAnnouncement(announcementId);
+                if (success)
                 {
-                    lblNoticeMessage.InnerText = dt.Rows[0]["Message"].ToString();
-                    lblNoticeAuthor.InnerText = dt.Rows[0]["CreatedBy"].ToString();
-                    
-                    if (dt.Rows[0]["DateCreated"] != DBNull.Value)
-                    {
-                        DateTime date = Convert.ToDateTime(dt.Rows[0]["DateCreated"]);
-                        lblNoticeDate.InnerText = date.ToString("MMM dd, yyyy hh:mm tt");
-                    }
-                    else
-                    {
-                        lblNoticeDate.InnerText = "";
-                    }
+                    BindAnnouncements();
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceDeleteSuccess", "showMessageModal('Announcement deleted successfully!');", true);
                 }
                 else
                 {
-                    lblNoticeMessage.InnerText = "No announcements posted yet.";
-                    lblNoticeAuthor.InnerText = "System";
-                    lblNoticeDate.InnerText = "";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowAnnounceDeleteError", "showMessageModal('Failed to delete announcement.');", true);
                 }
+                hfDeleteAnnounceId.Value = "";
             }
         }
+
+        private void BindAnnouncements()
+        {
+            DatabaseHelper db = new DatabaseHelper();
+            DataTable dt = db.GetAllAnnouncements();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                rptAnnouncements.DataSource = dt;
+                rptAnnouncements.DataBind();
+                rptAnnouncements.Visible = true;
+                lblNoNotices.Visible = false;
+            }
+            else
+            {
+                rptAnnouncements.Visible = false;
+                lblNoNotices.Visible = true;
+                lblNoNotices.InnerText = "No announcements posted yet.";
+            }
+        }
+
+        public bool IsUserAdmin()
+        {
+            if (Session["Username"] == null) return false;
+            DatabaseHelper db = new DatabaseHelper();
+            DataTable dt = db.GetUserByUsername(Session["Username"].ToString());
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                string userType = dt.Rows[0]["UserType"] != DBNull.Value ? dt.Rows[0]["UserType"].ToString() : "User";
+                return userType.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
+
 
         protected void btnEditProfile_Click(object sender, EventArgs e)
         {

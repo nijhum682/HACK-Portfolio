@@ -7,10 +7,17 @@ namespace project1
     public partial class managedb : System.Web.UI.Page
     {
         protected global::System.Web.UI.WebControls.GridView gvUsers;
+        protected global::System.Web.UI.WebControls.GridView gvContacts;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNotification;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlDeleteConfirm;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlContactDeleteConfirm;
         protected global::System.Web.UI.WebControls.Button btnConfirmDeleteYes;
+        protected global::System.Web.UI.WebControls.Button btnConfirmContactDeleteYes;
         protected global::System.Web.UI.WebControls.HiddenField hfDeleteUserId;
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteContactId;
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.WebControls.Button btnClearSearch;
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -28,6 +35,7 @@ namespace project1
             if (!IsPostBack)
             {
                 BindUsersGrid();
+                BindContactsGrid();
             }
         }
 
@@ -55,7 +63,23 @@ namespace project1
         {
             DatabaseHelper db = new DatabaseHelper();
             DataTable dt = db.GetAllUsers();
-            gvUsers.DataSource = dt;
+            
+            if (dt != null && !string.IsNullOrEmpty(txtSearch.Text.Trim()))
+            {
+                string searchKey = txtSearch.Text.Trim().Replace("'", "''");
+                string filterExpression = string.Format(
+                    "Name LIKE '%{0}%' OR Username LIKE '%{0}%' OR Email LIKE '%{0}%' OR Roll LIKE '%{0}%' OR Batch LIKE '%{0}%' OR Department LIKE '%{0}%' OR University LIKE '%{0}%' OR Phone LIKE '%{0}%' OR UserType LIKE '%{0}%'",
+                    searchKey);
+                
+                DataView dv = new DataView(dt);
+                dv.RowFilter = filterExpression;
+                gvUsers.DataSource = dv;
+            }
+            else
+            {
+                gvUsers.DataSource = dt;
+            }
+            
             gvUsers.DataBind();
         }
 
@@ -169,6 +193,58 @@ namespace project1
                     lblNotification.Visible = true;
                 }
             }
+        }
+
+        private void BindContactsGrid()
+        {
+            DatabaseHelper db = new DatabaseHelper();
+            DataTable dt = db.GetAllContacts();
+            gvContacts.DataSource = dt;
+            gvContacts.DataBind();
+        }
+
+        protected void gvContacts_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            // Handled via custom confirmation modal client-side bypass
+        }
+
+        protected void btnConfirmContactDeleteYes_Click(object sender, EventArgs e)
+        {
+            pnlContactDeleteConfirm.Style["display"] = "none";
+            lblNotification.Visible = false;
+
+            if (!string.IsNullOrEmpty(hfDeleteContactId.Value))
+            {
+                int contactId = Convert.ToInt32(hfDeleteContactId.Value);
+                DatabaseHelper db = new DatabaseHelper();
+                bool success = db.DeleteContact(contactId);
+                if (success)
+                {
+                    BindContactsGrid();
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowContactDeleteSuccess", "showMessageModal('Contact message deleted successfully!');", true);
+                }
+                else
+                {
+                    lblNotification.InnerText = "Failed to delete contact message.";
+                    lblNotification.Attributes["class"] = "error-message";
+                    lblNotification.Visible = true;
+                }
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            lblNotification.Visible = false;
+            gvUsers.EditIndex = -1;
+            BindUsersGrid();
+        }
+
+        protected void btnClearSearch_Click(object sender, EventArgs e)
+        {
+            lblNotification.Visible = false;
+            txtSearch.Text = "";
+            gvUsers.EditIndex = -1;
+            BindUsersGrid();
         }
 
 

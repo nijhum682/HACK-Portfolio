@@ -21,6 +21,11 @@
                     <span style="animation-delay: 0.75s;">e</span>
                 </h1>
                 <p class="hero-tagline">Club Member Database Control Panel</p>
+                <div class="search-bar-wrapper" style="margin-top: 1.5rem; display: flex; gap: 0.8rem; justify-content: center; max-width: 500px; margin-left: auto; margin-right: auto; z-index: 10; position: relative;">
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by any key" style="flex: 1; padding: 10px 20px; border: 1px solid rgba(0, 212, 255, 0.3); background: rgba(255, 255, 255, 0.08); color: #fff; border-radius: 25px; outline: none; font-size: 0.95rem; transition: border-color 0.3s;" />
+                    <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" CssClass="grid-btn" style="padding: 8px 25px; border-radius: 25px; margin: 0; min-width: 100px;" />
+                    <asp:Button ID="btnClearSearch" runat="server" Text="Reset" OnClick="btnClearSearch_Click" CssClass="grid-btn" style="padding: 8px 25px; border-radius: 25px; margin: 0; border-color: var(--light); color: #fff; min-width: 80px;" />
+                </div>
             </div>
             <div class="hero-background">
                 <div class="circle circle-1"></div>
@@ -82,6 +87,34 @@
                 <div id="lblNotification" runat="server" visible="false" ClientIDMode="Static"></div>
             </div>
 
+            <!-- Contact Submissions Card -->
+            <div class="profile-card" style="max-width: 100%; overflow-x: auto; margin-bottom: 2rem;">
+                <h2 style="text-align: left; margin-bottom: 1.5rem; color: var(--primary);">Contact Form Submissions</h2>
+                
+                <asp:GridView ID="gvContacts" runat="server" AutoGenerateColumns="False" 
+                    DataKeyNames="ContactID"
+                    OnRowDeleting="gvContacts_RowDeleting"
+                    CssClass="db-grid" 
+                    GridLines="None" 
+                    Width="100%">
+                    <Columns>
+                        <asp:BoundField DataField="ContactID" HeaderText="ID" ReadOnly="True" SortExpression="ContactID" />
+                        <asp:BoundField DataField="Name" HeaderText="Name" />
+                        <asp:BoundField DataField="Email" HeaderText="Email" />
+                        <asp:BoundField DataField="Roll" HeaderText="Roll" />
+                        <asp:BoundField DataField="Department" HeaderText="Dept" />
+                        <asp:BoundField DataField="Message" HeaderText="Message" />
+                        <asp:BoundField DataField="DateSubmitted" HeaderText="Submitted Date" DataFormatString="{0:yyyy-MM-dd HH:mm}" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="Actions">
+                            <ItemTemplate>
+                                <asp:Button ID="btnDeleteContact" runat="server" Text="Delete" CssClass="grid-btn" 
+                                    OnClientClick='<%# "showContactDeleteConfirm(" + Eval("ContactID") + "); return false;" %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+
             <!-- Custom Delete Confirmation Box (Placed outside profile-card to prevent layout/transform issues) -->
             <div id="pnlDeleteConfirm" runat="server" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
                 <p style="margin-bottom: 1.5rem; font-weight: 600; color: #fff; font-size: 1.1rem;">Do you want to delete this record?</p>
@@ -90,6 +123,16 @@
                     <button type="button" class="grid-btn" onclick="closeDeleteConfirm();" style="padding: 8px 25px; border-radius: 20px; border-color: var(--light); color: #fff;">No</button>
                 </div>
                 <asp:HiddenField ID="hfDeleteUserId" runat="server" ClientIDMode="Static" />
+            </div>
+
+            <!-- Custom Contact Delete Confirmation Box -->
+            <div id="pnlContactDeleteConfirm" runat="server" ClientIDMode="Static" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: #0a0a0a; border: 2px solid var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4); border-radius: 10px; padding: 2rem; text-align: center;">
+                <p style="margin-bottom: 1.5rem; font-weight: 600; color: #fff; font-size: 1.1rem;">Do you want to delete this contact submission?</p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <asp:Button ID="btnConfirmContactDeleteYes" runat="server" Text="Yes" CssClass="grid-btn" OnClick="btnConfirmContactDeleteYes_Click" style="padding: 8px 25px; border-radius: 20px;" />
+                    <button type="button" class="grid-btn" onclick="closeContactDeleteConfirm();" style="padding: 8px 25px; border-radius: 20px; border-color: var(--light); color: #fff;">No</button>
+                </div>
+                <asp:HiddenField ID="hfDeleteContactId" runat="server" ClientIDMode="Static" />
             </div>
 
             <!-- Custom Message Modal Box (Placed outside profile-card to prevent layout/transform issues) -->
@@ -108,6 +151,8 @@
                     if (notification) notification.style.display = 'none';
                     const msgBox = document.getElementById('pnlMessageModal');
                     if (msgBox) msgBox.style.display = 'none';
+                    const contactConfirmBox = document.getElementById('pnlContactDeleteConfirm');
+                    if (contactConfirmBox) contactConfirmBox.style.display = 'none';
  
                     const confirmBox = document.getElementById('pnlDeleteConfirm');
                     const hiddenField = document.getElementById('hfDeleteUserId');
@@ -124,13 +169,38 @@
                     }
                 }
 
-                function showMessageModal(msg) {
-                    // Hide delete confirmation box if visible
-                    const confirmBox = document.getElementById('pnlDeleteConfirm');
-                    if (confirmBox) confirmBox.style.display = 'none';
+                function showContactDeleteConfirm(contactId) {
                     const notification = document.getElementById('lblNotification');
                     if (notification) notification.style.display = 'none';
+                    const msgBox = document.getElementById('pnlMessageModal');
+                    if (msgBox) msgBox.style.display = 'none';
+                    const userConfirmBox = document.getElementById('pnlDeleteConfirm');
+                    if (userConfirmBox) userConfirmBox.style.display = 'none';
 
+                    const confirmBox = document.getElementById('pnlContactDeleteConfirm');
+                    const hiddenField = document.getElementById('hfDeleteContactId');
+                    if (confirmBox && hiddenField) {
+                        hiddenField.value = contactId;
+                        confirmBox.style.display = 'block';
+                    }
+                }
+
+                function closeContactDeleteConfirm() {
+                    const confirmBox = document.getElementById('pnlContactDeleteConfirm');
+                    if (confirmBox) {
+                        confirmBox.style.display = 'none';
+                    }
+                }
+ 
+                function showMessageModal(msg) {
+                    // Hide delete confirmation boxes if visible
+                    const confirmBox = document.getElementById('pnlDeleteConfirm');
+                    if (confirmBox) confirmBox.style.display = 'none';
+                    const contactConfirmBox = document.getElementById('pnlContactDeleteConfirm');
+                    if (contactConfirmBox) contactConfirmBox.style.display = 'none';
+                    const notification = document.getElementById('lblNotification');
+                    if (notification) notification.style.display = 'none';
+ 
                     const msgBox = document.getElementById('pnlMessageModal');
                     const msgText = document.getElementById('lblMessageModalText');
                     if (msgBox && msgText) {

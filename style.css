@@ -13,13 +13,31 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: var(--dark);
+    background: transparent;
     color: #fff;
     line-height: 1.6;
+    position: relative;
 }
 
 html {
     scroll-behavior: smooth;
+    background: var(--dark);
+}
+
+#hardware-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(circle at center, #0d111b 0%, var(--dark) 100%);
+}
+
+form, main, footer {
+    position: relative;
+    z-index: 1;
 }
 
 /* Header */
@@ -156,7 +174,7 @@ html {
     align-items: center;
     justify-content: center;
     position: relative;
-    background: linear-gradient(135deg, var(--dark) 0%, #050505 100%);
+    background: transparent;
     padding: 6rem 0 3rem 0;
     overflow: hidden;
 }
@@ -586,11 +604,12 @@ section a {
 }
 
 footer {
-    background: #050505;
+    background: rgba(5, 5, 5, 0.85);
+    backdrop-filter: blur(5px);
     padding: 2rem;
     text-align: center;
     color: var(--light);
-    border-top: 1px solid #1a1a1a;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .quick-contact {
