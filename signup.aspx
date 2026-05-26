@@ -29,7 +29,7 @@
         <section class="content-section">
             <h2>Sign Up for Updates</h2>
             <div id="signupForm" class="custom-form" runat="server">
-                <input type="text" id="txtName" runat="server" placeholder="Your name" required>
+                <input type="text" id="txtName" runat="server" placeholder="Your name" required ClientIDMode="Static">
                 <input type="text" id="txtUsername" runat="server" placeholder="Username" required ClientIDMode="Static">
                 <div class="password-container">
                     <input type="password" id="txtPassword" runat="server" placeholder="Password" required ClientIDMode="Static">
@@ -44,28 +44,28 @@
                         </svg>
                     </button>
                 </div>
-                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required>
-                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required>
-                <input type="text" id="txtBatch" runat="server" placeholder="Batch" required>
-                <input type="text" id="txtDept" runat="server" placeholder="Department" required>
-                <input type="text" id="txtUni" runat="server" placeholder="University" required>
-                <input type="text" id="txtmobile" runat="server" placeholder="Phone Number" required>
-                <input type="text" id="txtReason" runat="server" placeholder="Why are you joining with HACK?" required>
+                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required ClientIDMode="Static">
+                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required ClientIDMode="Static">
+                <input type="text" id="txtBatch" runat="server" placeholder="Batch" required ClientIDMode="Static">
+                <input type="text" id="txtDept" runat="server" placeholder="Department" required ClientIDMode="Static">
+                <input type="text" id="txtUni" runat="server" placeholder="University" required ClientIDMode="Static">
+                <input type="text" id="txtmobile" runat="server" placeholder="Phone Number" required ClientIDMode="Static">
+                <input type="text" id="txtReason" runat="server" placeholder="Why are you joining with HACK?" required ClientIDMode="Static">
                 <div class="radio-group">
                     <label class="form-question">User Type</label>
                     <div class="radio-options">
                         <label class="radio-option-label">
-                            <input type="radio" id="radUser" name="userTypeGroup" value="User" runat="server" checked>
+                            <input type="radio" id="radUser" name="userTypeGroup" value="User" runat="server" checked ClientIDMode="Static">
                             <span>User</span>
                         </label>
                         <label class="radio-option-label">
-                            <input type="radio" id="radAdmin" name="userTypeGroup" value="Admin" runat="server">
+                            <input type="radio" id="radAdmin" name="userTypeGroup" value="Admin" runat="server" ClientIDMode="Static">
                             <span>Admin</span>
                         </label>
                     </div>
                 </div>
                 <label class="checkbox-label">
-                    <input type="checkbox" id="agreeCheckbox" runat="server" required>
+                    <input type="checkbox" id="agreeCheckbox" runat="server" required ClientIDMode="Static">
                     <span>I must agree with the rules and policies of this club ensuring all the information that I have provided is correct.</span>
                 </label>
                 <button type="submit" id="btnSignUp" runat="server" onserverclick="btnSignUp_Click" ClientIDMode="Static">Sign Up</button>
@@ -113,6 +113,18 @@
                 }
             }
 
+            // Cookie helpers
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+                return null;
+            }
+
+            function setCookie(name, value) {
+                document.cookie = `${name}=${encodeURIComponent(value)}; path=/; SameSite=Lax`;
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
                 const toggleBtn = document.getElementById('btnTogglePassword');
                 const passwordInput = document.getElementById('txtPassword');
@@ -120,6 +132,47 @@
                 const form = document.getElementById('form1');
                 const eyeOpen = toggleBtn.querySelector('.eye-open-icon');
                 const eyeClose = toggleBtn.querySelector('.eye-close-icon');
+
+                // Restore draft values from cookies
+                const textFields = ['txtName', 'txtUsername', 'txtEmail', 'txtRoll', 'txtBatch', 'txtDept', 'txtUni', 'txtmobile', 'txtReason'];
+                textFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const val = getCookie('draft_' + id);
+                        if (val !== null) el.value = val;
+                        el.addEventListener('input', () => {
+                            setCookie('draft_' + id, el.value);
+                        });
+                    }
+                });
+
+                const radUser = document.getElementById('radUser');
+                const radAdmin = document.getElementById('radAdmin');
+                if (radUser && radAdmin) {
+                    const savedUserType = getCookie('draft_userType');
+                    if (savedUserType === 'Admin') {
+                        radAdmin.checked = true;
+                    } else if (savedUserType === 'User') {
+                        radUser.checked = true;
+                    }
+                    radUser.addEventListener('change', () => {
+                        if (radUser.checked) setCookie('draft_userType', 'User');
+                    });
+                    radAdmin.addEventListener('change', () => {
+                        if (radAdmin.checked) setCookie('draft_userType', 'Admin');
+                    });
+                }
+
+                const agreeCheckbox = document.getElementById('agreeCheckbox');
+                if (agreeCheckbox) {
+                    const savedAgree = getCookie('draft_agreeCheckbox');
+                    if (savedAgree === 'true') {
+                        agreeCheckbox.checked = true;
+                    }
+                    agreeCheckbox.addEventListener('change', () => {
+                        setCookie('draft_agreeCheckbox', agreeCheckbox.checked ? 'true' : 'false');
+                    });
+                }
 
                 // Toggle password visibility
                 toggleBtn.addEventListener('click', (e) => {
@@ -164,8 +217,8 @@
                         // In ASP.NET, there is a single page form, so let's verify if the password input exists and is visible
                         if (passwordInput && passwordInput.offsetParent !== null) {
                             if (!validatePassword()) {
-                                e.preventDefault();
-                                return false;
+                                    e.preventDefault();
+                                    return false;
                             }
                         }
                     });

@@ -103,6 +103,18 @@ namespace project1
                 bool success = db.InsertUser(name, username, password, email, roll, batch, department, university, mobile, reason, userType);
                 if (success)
                 {
+                    // Clear draft cookies
+                    string[] draftCookies = { "draft_txtName", "draft_txtUsername", "draft_txtEmail", "draft_txtRoll", "draft_txtBatch", "draft_txtDept", "draft_txtUni", "draft_txtmobile", "draft_txtReason", "draft_userType", "draft_agreeCheckbox" };
+                    foreach (string cookieName in draftCookies)
+                    {
+                        if (Request.Cookies[cookieName] != null)
+                        {
+                            System.Web.HttpCookie c = new System.Web.HttpCookie(cookieName);
+                            c.Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies.Add(c);
+                        }
+                    }
+
                     // Hide the form and show the success message
                     signupForm.Visible = false;
                     signupMessage.Visible = true;

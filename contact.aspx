@@ -27,12 +27,12 @@
         <section class="content-section">
             <h2>Contact Form</h2>
             <div id="contactForm" class="custom-form" runat="server">
-                <input type="text" id="txtName" runat="server" placeholder="Your name" required>
-                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required>
-                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required>
-                <input type="text" id="txtDept" runat="server" placeholder="Department">
-                <textarea id="txtMessage" runat="server" rows="4" placeholder="Your message" required></textarea>
-                <button type="submit" id="btnSubmit" runat="server" onserverclick="btnSubmit_Click">Send Message</button>
+                <input type="text" id="txtName" runat="server" placeholder="Your name" required ClientIDMode="Static">
+                <input type="email" id="txtEmail" runat="server" placeholder="Your email" required ClientIDMode="Static">
+                <input type="text" id="txtRoll" runat="server" placeholder="Your Roll" required ClientIDMode="Static">
+                <input type="text" id="txtDept" runat="server" placeholder="Department" ClientIDMode="Static">
+                <textarea id="txtMessage" runat="server" rows="4" placeholder="Your message" required ClientIDMode="Static"></textarea>
+                <button type="submit" id="btnSubmit" runat="server" onserverclick="btnSubmit_Click" ClientIDMode="Static">Send Message</button>
             </div>
             <div id="successMessage" class="success-message" runat="server" visible="false">
                 Your message is sent to our admin 
@@ -72,5 +72,33 @@
                 </div>
             </div>
         </section>
+        
+        <script>
+            // Cookie helpers
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+                return null;
+            }
+
+            function setCookie(name, value) {
+                document.cookie = `${name}=${encodeURIComponent(value)}; path=/; SameSite=Lax`;
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const fields = ['txtName', 'txtEmail', 'txtRoll', 'txtDept', 'txtMessage'];
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const val = getCookie('draft_contact_' + id);
+                        if (val !== null) el.value = val;
+                        el.addEventListener('input', () => {
+                            setCookie('draft_contact_' + id, el.value);
+                        });
+                    }
+                });
+            });
+        </script>
     
 </asp:Content>

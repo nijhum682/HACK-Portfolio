@@ -18,6 +18,15 @@ namespace project1
             {
                 Session.Clear();
                 Session.Abandon();
+
+                // Clear the LoggedInUser cookie
+                if (Request.Cookies["LoggedInUser"] != null)
+                {
+                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("LoggedInUser");
+                    cookie.Expires = DateTime.Now.AddDays(-1);
+                    Response.Cookies.Add(cookie);
+                }
+
                 Response.Redirect("signin.aspx");
             }
 
@@ -45,6 +54,11 @@ namespace project1
                 {
                     // Successful login
                     Session["Username"] = username;
+
+                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("LoggedInUser", username);
+                    // Do not set Expires to make it a session cookie (cleared when browser exits)
+                    Response.Cookies.Add(cookie);
+
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowSignInSuccess", "showMessageModalAndRedirect('Successfully Signing In', 'profile.aspx');", true);
                 }
                 else
