@@ -104,7 +104,12 @@
                         <asp:BoundField DataField="Roll" HeaderText="Roll" />
                         <asp:BoundField DataField="Department" HeaderText="Dept" />
                         <asp:BoundField DataField="Message" HeaderText="Message" />
-                        <asp:BoundField DataField="DateSubmitted" HeaderText="Submitted Date" DataFormatString="{0:yyyy-MM-dd HH:mm}" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="Submitted Date">
+                            <ItemTemplate>
+                                <%# string.Format("{0:dd/MM/yy}", Eval("DateSubmitted")) %><br />
+                                <%# string.Format("{0:hh:mm tt}", Eval("DateSubmitted")).ToLower() %>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="Actions">
                             <ItemTemplate>
                                 <asp:Button ID="btnDeleteContact" runat="server" Text="Delete" CssClass="grid-btn" 

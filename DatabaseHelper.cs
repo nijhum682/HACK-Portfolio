@@ -336,20 +336,106 @@ namespace project1
                 using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
                     conn.Open();
-                    string query = "DELETE FROM Contact WHERE ContactID = @id";
-                    
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlTransaction trans = conn.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@id", contactId);
-                        cmd.ExecuteNonQuery();
-                        return true;
+                        try
+                        {
+                            string query = "DELETE FROM Contact WHERE ContactID = @id";
+                            using (MySqlCommand cmd = new MySqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@id", contactId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            ReorderContactIDs(conn, trans);
+                            trans.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            throw;
+                        }
                     }
+
+                    string resetAutoQuery = "ALTER TABLE Contact AUTO_INCREMENT = 1";
+                    using (MySqlCommand cmd = new MySqlCommand(resetAutoQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Error deleting contact: " + ex.Message);
                 return false;
+            }
+        }
+
+        private void ReorderContactIDs(MySqlConnection conn, MySqlTransaction trans)
+        {
+            System.Collections.Generic.List<int> contactIds = new System.Collections.Generic.List<int>();
+            string selectQuery = "SELECT ContactID FROM Contact ORDER BY ContactID ASC";
+            using (MySqlCommand cmd = new MySqlCommand(selectQuery, conn, trans))
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        contactIds.Add(reader.GetInt32(0));
+                    }
+                }
+            }
+
+            for (int i = 0; i < contactIds.Count; i++)
+            {
+                int oldId = contactIds[i];
+                int newId = i + 1;
+                if (oldId != newId)
+                {
+                    string updateQuery = "UPDATE Contact SET ContactID = @newId WHERE ContactID = @oldId";
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, conn, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@newId", newId);
+                        cmd.Parameters.AddWithValue("@oldId", oldId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public void ReorderAllContactIDs()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (MySqlTransaction trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            ReorderContactIDs(conn, trans);
+                            trans.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            throw;
+                        }
+                    }
+
+                    string resetAutoQuery = "ALTER TABLE Contact AUTO_INCREMENT = 1";
+                    using (MySqlCommand cmd = new MySqlCommand(resetAutoQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error reordering all contact IDs: " + ex.Message);
             }
         }
 
@@ -526,14 +612,38 @@ namespace project1
                 using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
                     conn.Open();
-                    string query = "DELETE FROM Users WHERE UserID = @userId";
-                    
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlTransaction trans = conn.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        cmd.ExecuteNonQuery();
-                        return true;
+                        try
+                        {
+                            // 1. Delete the user
+                            string deleteQuery = "DELETE FROM Users WHERE UserID = @userId";
+                            using (MySqlCommand cmd = new MySqlCommand(deleteQuery, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@userId", userId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 2. Reorder all UserIDs sequentially (1, 2, 3...)
+                            ReorderUserIDs(conn, trans);
+
+                            trans.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            throw;
+                        }
                     }
+
+                    // 3. Reset the AUTO_INCREMENT value
+                    string resetAutoIncrementQuery = "ALTER TABLE Users AUTO_INCREMENT = 1";
+                    using (MySqlCommand cmd = new MySqlCommand(resetAutoIncrementQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -541,6 +651,73 @@ namespace project1
                 LogError("DeleteUser", ex);
                 System.Diagnostics.Debug.WriteLine("Error deleting user: " + ex.Message);
                 return false;
+            }
+        }
+
+        private void ReorderUserIDs(MySqlConnection conn, MySqlTransaction trans)
+        {
+            System.Collections.Generic.List<int> userIds = new System.Collections.Generic.List<int>();
+            string selectQuery = "SELECT UserID FROM Users ORDER BY UserID ASC";
+            using (MySqlCommand cmd = new MySqlCommand(selectQuery, conn, trans))
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        userIds.Add(reader.GetInt32(0));
+                    }
+                }
+            }
+
+            for (int i = 0; i < userIds.Count; i++)
+            {
+                int oldId = userIds[i];
+                int newId = i + 1;
+                if (oldId != newId)
+                {
+                    string updateQuery = "UPDATE Users SET UserID = @newId WHERE UserID = @oldId";
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, conn, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@newId", newId);
+                        cmd.Parameters.AddWithValue("@oldId", oldId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public void ReorderAllUserIDs()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (MySqlTransaction trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            ReorderUserIDs(conn, trans);
+                            trans.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trans.Rollback();
+                            throw;
+                        }
+                    }
+
+                    string resetAutoIncrementQuery = "ALTER TABLE Users AUTO_INCREMENT = 1";
+                    using (MySqlCommand cmd = new MySqlCommand(resetAutoIncrementQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("ReorderAllUserIDs", ex);
+                System.Diagnostics.Debug.WriteLine("Error reordering all user IDs: " + ex.Message);
             }
         }
 

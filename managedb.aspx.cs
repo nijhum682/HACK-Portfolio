@@ -34,6 +34,10 @@ namespace project1
 
             if (!IsPostBack)
             {
+                DatabaseHelper db = new DatabaseHelper();
+                db.ReorderAllUserIDs();
+                db.ReorderAllContactIDs();
+
                 BindUsersGrid();
                 BindContactsGrid();
             }
